@@ -1,2 +1,2 @@
-// What this package implements, and a first-hand link to the specification it
-// implements. A package without that link is not finished.
+// IPv4 (RFC 791), IPv6 (RFC 4291, RFC 8200), the canonical text form (RFC 5952) and the
+// special-purpose ranges (RFC 6890). https://www.rfc-editor.org/rfc/rfc5952
