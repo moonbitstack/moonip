@@ -416,7 +416,7 @@ em {
   gap: 2px;
 }
 
-.bits.long .bit {
+.bit {
   aspect-ratio: 1 / 1.4;
   display: grid;
   place-items: center;
@@ -431,6 +431,14 @@ em {
 .bit.one {
   color: var(--ink);
   font-weight: 500;
+}
+
+/* Sixteen to a row, so the eight groups of an IPv6 address read as eight lines;
+   a fixed height keeps a /128 walk from filling the page. */
+.bits.long .bit {
+  aspect-ratio: auto;
+  height: 24px;
+  font-size: 10px;
 }
 
 .bit.four.one {
