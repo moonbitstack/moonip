@@ -61,3 +61,47 @@ jobs:
       - name: interfaces are up to date
         run: |
           moon info --target all && git diff --exit-code
+
+      - name: the skill says what it is
+        run: |
+          python3 - <<'PY'
+          import pathlib, re
+          text = pathlib.Path("docs/skills/moonip/SKILL.md").read_text(encoding="utf-8")
+          front = re.match(r"^---\n(.*?)\n---\n", text, re.S)
+          assert front, "SKILL.md has no frontmatter"
+          fields = dict(
+              line.split(":", 1) for line in front.group(1).splitlines() if ":" in line
+          )
+          assert fields.get("name", "").strip() == "moonip", "name must be the module name"
+          assert len(fields.get("description", "")) > 40, "description must say what and when"
+          PY
+
+  differential:
+    permissions:
+      contents: read
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.5"
+
+      - name: install moonbit
+        run: |
+          curl -fsSL https://cli.moonbitlang.com/install/unix.sh | bash
+          echo "$HOME/.moon/bin" >> "$GITHUB_PATH"
+
+      - name: the vectors are up to date
+        run: |
+          moon update
+          python3 scripts/gen_vectors.py
+          moon fmt
+          git diff --exit-code
+
+      - name: the reference is up to date
+        run: |
+          python3 scripts/gen_api.py
+          git diff --exit-code docs/api.html

@@ -76,3 +76,22 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             https://api.github.com/repos/moonbitstack/moonbitstack.github.io/dispatches \
             -d '{"event_type":"released"}'
+
+  skills:
+    needs: publish
+    if: vars.MOONCAKES_PUBLISH == 'true'
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # The skill ships with the version it documents; the publisher reads the
+      # version number from moon.mod.
+      - name: publish the skill
+        run: |
+          if ! command -v moon-skills >/dev/null 2>&1; then
+            echo "::warning::moon-skills is not on this runner, so docs/skills/moonip was not published"
+            exit 0
+          fi
+          moon-skills publish docs/skills/moonip
