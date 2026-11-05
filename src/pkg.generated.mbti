@@ -1,11 +1,150 @@
 // Generated using `moon info`, DON'T EDIT IT
 package "moonbitstack/moonip"
 
+import {
+  "moonbitlang/core/debug",
+}
+
 // Values
+pub fn collapse(ArrayView[Prefix]) -> Array[Prefix]
+
+pub let loopback4 : Addr
+
+pub let loopback6 : Addr
+
+pub fn summarize(Addr, Addr) -> Array[Prefix] raise Refused
+
+pub let unspecified4 : Addr
+
+pub let unspecified6 : Addr
 
 // Errors
+pub(all) suberror Refused {
+  Malformed(at~ : Int32)
+  OutOfRange(limit~ : Int32, got~ : Int32)
+  Length(want~ : Int32, got~ : Int32)
+  HostBits
+  Family
+  Reversed
+}
+pub fn Refused::output(Self, &Logger) -> Unit
+pub fn Refused::to_string(Self) -> String
+pub impl Show for Refused
 
 // Types and methods
+pub struct Addr {
+  hi : UInt64
+  lo : UInt64
+  v4 : Bool
+  zone : String?
+}
+pub fn Addr::bits(Self) -> Int32
+pub fn Addr::compare(Self, Self) -> Int32
+pub fn Addr::decode(BytesView) -> Self raise Refused
+pub fn Addr::encode(Self) -> Bytes
+pub fn Addr::equal(Self, Self) -> Bool
+pub fn Addr::exploded(Self) -> String
+pub fn Addr::hash(Self) -> Int32
+pub fn Addr::hash_combine(Self, Hasher) -> Unit
+pub fn Addr::is_global(Self) -> Bool
+pub fn Addr::is_link_local(Self) -> Bool
+pub fn Addr::is_loopback(Self) -> Bool
+pub fn Addr::is_multicast(Self) -> Bool
+pub fn Addr::is_private(Self) -> Bool
+pub fn Addr::is_reserved(Self) -> Bool
+pub fn Addr::is_site_local(Self) -> Bool
+pub fn Addr::is_unspecified(Self) -> Bool
+pub fn Addr::is_v4(Self) -> Bool
+pub fn Addr::is_v4_mapped(Self) -> Bool
+pub fn Addr::is_v6(Self) -> Bool
+pub fn Addr::mapped(Self) -> Self
+pub fn Addr::next(Self) -> Self?
+pub fn Addr::not_equal(Self, Self) -> Bool
+pub fn Addr::op_ge(Self, Self) -> Bool
+pub fn Addr::op_gt(Self, Self) -> Bool
+pub fn Addr::op_le(Self, Self) -> Bool
+pub fn Addr::op_lt(Self, Self) -> Bool
+pub fn Addr::output(Self, &Logger) -> Unit
+pub fn Addr::parse(StringView) -> Self raise Refused
+pub fn Addr::prev(Self) -> Self?
+pub fn Addr::reverse_pointer(Self) -> String
+pub fn Addr::sixtofour(Self) -> Self?
+pub fn Addr::teredo(Self) -> (Self, Self)?
+pub fn Addr::to_repr(Self) -> @debug.Repr
+pub fn Addr::to_string(Self) -> String
+pub fn Addr::unmap(Self) -> Self
+pub fn Addr::v4(Byte, Byte, Byte, Byte) -> Self
+pub fn Addr::v6(UInt64, UInt64) -> Self
+pub fn Addr::with_zone(Self, String?) -> Self
+pub fn Addr::zone(Self) -> String?
+pub impl Compare for Addr
+pub impl Eq for Addr
+pub impl Hash for Addr
+pub impl Show for Addr
+pub impl @debug.Debug for Addr
+
+pub struct AddrPort {
+  addr : Addr
+  port : Int32
+}
+pub fn AddrPort::addr(Self) -> Addr
+pub fn AddrPort::compare(Self, Self) -> Int32
+pub fn AddrPort::equal(Self, Self) -> Bool
+pub fn AddrPort::hash(Self) -> Int32
+pub fn AddrPort::hash_combine(Self, Hasher) -> Unit
+pub fn AddrPort::new(Addr, Int32) -> Self raise Refused
+pub fn AddrPort::not_equal(Self, Self) -> Bool
+pub fn AddrPort::op_ge(Self, Self) -> Bool
+pub fn AddrPort::op_gt(Self, Self) -> Bool
+pub fn AddrPort::op_le(Self, Self) -> Bool
+pub fn AddrPort::op_lt(Self, Self) -> Bool
+pub fn AddrPort::output(Self, &Logger) -> Unit
+pub fn AddrPort::parse(StringView) -> Self raise Refused
+pub fn AddrPort::port(Self) -> Int32
+pub fn AddrPort::to_repr(Self) -> @debug.Repr
+pub fn AddrPort::to_string(Self) -> String
+pub impl Compare for AddrPort
+pub impl Eq for AddrPort
+pub impl Hash for AddrPort
+pub impl Show for AddrPort
+pub impl @debug.Debug for AddrPort
+
+pub struct Prefix {
+  net : Addr
+  plen : Int32
+}
+pub fn Prefix::addr(Self) -> Addr
+pub fn Prefix::bits(Self) -> Int32
+pub fn Prefix::broadcast(Self) -> Addr?
+pub fn Prefix::compare(Self, Self) -> Int32
+pub fn Prefix::contains(Self, Addr) -> Bool
+pub fn Prefix::equal(Self, Self) -> Bool
+pub fn Prefix::exclude(Self, Self) -> Array[Self] raise Refused
+pub fn Prefix::hash(Self) -> Int32
+pub fn Prefix::hash_combine(Self, Hasher) -> Unit
+pub fn Prefix::hostmask(Self) -> Addr
+pub fn Prefix::hosts(Self) -> Iter[Addr]
+pub fn Prefix::is_subnet_of(Self, Self) -> Bool
+pub fn Prefix::masked(Self) -> Self
+pub fn Prefix::netmask(Self) -> Addr
+pub fn Prefix::new(Addr, Int32) -> Self raise Refused
+pub fn Prefix::not_equal(Self, Self) -> Bool
+pub fn Prefix::op_ge(Self, Self) -> Bool
+pub fn Prefix::op_gt(Self, Self) -> Bool
+pub fn Prefix::op_le(Self, Self) -> Bool
+pub fn Prefix::op_lt(Self, Self) -> Bool
+pub fn Prefix::output(Self, &Logger) -> Unit
+pub fn Prefix::overlaps(Self, Self) -> Bool
+pub fn Prefix::parse(StringView, strict? : Bool) -> Self raise Refused
+pub fn Prefix::subnets(Self, bits~ : Int32) -> Iter[Self] raise Refused
+pub fn Prefix::supernet(Self, bits~ : Int32) -> Self raise Refused
+pub fn Prefix::to_repr(Self) -> @debug.Repr
+pub fn Prefix::to_string(Self) -> String
+pub impl Compare for Prefix
+pub impl Eq for Prefix
+pub impl Hash for Prefix
+pub impl Show for Prefix
+pub impl @debug.Debug for Prefix
 
 // Type aliases
 

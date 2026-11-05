@@ -1,2 +1,7 @@
-// IPv4 (RFC 791), IPv6 (RFC 4291, RFC 8200), the canonical text form (RFC 5952) and the
-// special-purpose ranges (RFC 6890). https://www.rfc-editor.org/rfc/rfc5952
+// IPv4 (RFC 791), IPv6 (RFC 4291, RFC 8200), the canonical text form (RFC 5952),
+// classless prefixes (RFC 4632) and the special-purpose ranges (RFC 6890 plus the
+// IANA registries it points at). https://www.rfc-editor.org/rfc/rfc5952
+
+import {
+  "moonbitlang/core/debug",
+}
