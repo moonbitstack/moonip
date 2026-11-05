@@ -417,19 +417,13 @@ em {
 }
 
 .bits.long .bit {
-  aspect-ratio: auto;
-  height: 24px;
-  font-size: 10px;
-}
-
-.bit {
   aspect-ratio: 1 / 1.4;
   display: grid;
   place-items: center;
   background: var(--cell);
   font-family: "JetBrains Mono", monospace;
   font-size: 11px;
-  color: var(--ink-3);
+  color: color-mix(in srgb, var(--ink) 52%, transparent);
   border-radius: 1px;
   transition: background 120ms ease, color 120ms ease;
 }
@@ -440,26 +434,30 @@ em {
 }
 
 .bit.four.one {
-  background: color-mix(in srgb, var(--v4) 16%, var(--cell));
+  background: color-mix(in srgb, var(--v4) 20%, var(--cell));
   color: var(--v4);
 }
 
 .bit.six.one {
-  background: color-mix(in srgb, var(--v6) 18%, var(--cell));
+  background: color-mix(in srgb, var(--v6) 24%, var(--cell));
   color: var(--v6);
 }
 
+/* The host part is quieter, and says so with colour rather than with opacity, so
+   it reads the same in both themes. */
 .bit.host {
-  opacity: 0.5;
-}
-
-.bits.long .bit.host {
-  opacity: 0.45;
+  color: color-mix(in srgb, var(--ink) 32%, transparent);
 }
 
 .bit.host.one {
   background: color-mix(in srgb, var(--ink) 8%, var(--cell));
-  color: var(--ink-2);
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
+}
+
+.bit.four.host.one,
+.bit.six.host.one {
+  background: color-mix(in srgb, var(--ink) 10%, var(--cell));
+  color: color-mix(in srgb, var(--ink) 62%, transparent);
 }
 
 .ruler-foot {
