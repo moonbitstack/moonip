@@ -1,0 +1,12 @@
+// The engine behind the interactives on the documentation site: this package
+// built to JavaScript. Text in, JSON out, so the page never re-implements a
+// decision that belongs to the library.
+import {
+  "moonbitstack/moonip",
+}
+
+options(
+  link: {
+    "js": { "exports": [ "probe", "split", "range", "merge" ], "format": "esm" },
+  },
+)

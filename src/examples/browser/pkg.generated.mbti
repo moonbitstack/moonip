@@ -1,0 +1,19 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "moonbitstack/moonip/examples/browser"
+
+// Values
+pub fn merge(String) -> String
+
+pub fn probe(String) -> String
+
+pub fn range(String, String) -> String
+
+pub fn split(String, Int32) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits
