@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>moonip — IP addresses and networks for MoonBit</title>
+<meta name="description" content="IPv4 and IPv6 addresses, classless prefixes and the special-purpose ranges, for MoonBit. Parsing, formatting and arithmetic, with no sockets.">
+<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1013" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./assets/site.css">
+<script type="module" src="./assets/scrollbar.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="page top-in">
+    <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+    <nav class="nav">
+      <a href="./guide.html">Guide</a>
+      <a href="./api.html">API</a>
+      <a href="./explorer.html">Explorer</a>
+      <a class="gh" href="https://github.com/moonbitstack/moonip" aria-label="GitHub repository" title="GitHub">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="page masthead">
+  <div class="hero-top">
+    <p class="label">IPv4 · IPv6 · <b>blocks</b> · classification</p>
+    <svg class="tick-tr" width="176" height="58" viewBox="0 0 176 58" aria-hidden="true"><path class="a" d="M40 4h136"/><path class="b" d="M74 22h102"/><path class="c" d="M108 40h68"/></svg>
+  </div>
+  <h1 class="display">Addresses, blocks,<br>and the bits between.</h1>
+  <div class="split" style="margin-top:30px">
+    <p class="lede">moonip reads and writes the text forms of RFC 4291, gives every address back in the
+    canonical shape of RFC 5952, works out which block it sits in, and says whether that block is
+    reachable. Values are immutable and can key a map. No sockets, no I/O, no dependencies.</p>
+    <div class="hero-note">
+      <dl>
+        <dt>families</dt><dd>IPv4 · IPv6, zones included</dd>
+        <dt>text</dt><dd>RFC 4291 in, RFC 5952 out</dd>
+        <dt>blocks</dt><dd>classless prefixes, any length</dd>
+        <dt>ranges</dt><dd>IANA special-purpose registries</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section class="page">
+  <figure class="ruler" style="margin:0">
+    <div class="ruler-head">
+      <span class="mono">2001:db8::1<span class="cmt">&nbsp;&nbsp;/32</span></span>
+      <span class="label">128 bits · 32 in the block</span>
+    </div>
+    <div class="bits long" id="hero-bits" aria-hidden="true">
+        <i class="bit six">0</i><i class="bit six">0</i><i class="bit six one">1</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six one">1</i>
+        <i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six one">1</i><i class="bit six one">1</i><i class="bit six">0</i><i class="bit six one">1</i><i class="bit six one">1</i><i class="bit six">0</i><i class="bit six one">1</i><i class="bit six one">1</i><i class="bit six one">1</i><i class="bit six">0</i><i class="bit six">0</i><i class="bit six">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i>
+        <i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six host">0</i><i class="bit six one host">1</i>
+    </div>
+    <div class="ruler-foot">
+      <span><b>2001:0db8</b> the block</span>
+      <span><b>0000:0000:0000:0000:0001</b> the host part</span>
+      <span class="mask">mask /32</span>
+    </div>
+  </figure>
+  <p style="margin:10px 0 0;font-size:12.5px;color:var(--ink-3)">Documentation prefix from RFC 3849. The rows of sixteen are the eight groups of an IPv6 address.</p>
+</section>
+
+<section class="band">
+  <div class="page">
+    <div class="head">
+      <div>
+        <p class="label">01 / the surface</p>
+        <h2 class="section">Three kinds of value,<br>one package.</h2>
+      </div>
+      <p class="lede" style="margin:0">An address, a block, and an address with a port. Everything else in the
+      library is a function over one of those three, which is why the whole surface fits in one table.</p>
+    </div>
+    <div class="planes">
+      <div class="plane">
+        <span class="label">Addr</span>
+        <h3>One address</h3>
+        <p>Four or sixteen bytes, plus the zone an IPv6 link-local address may carry. Compares and hashes by
+        its bits.</p>
+        <ul>
+          <li><b>parse</b> · decode</li>
+          <li><b>encode</b> · exploded</li>
+          <li><b>next</b> · prev · unmap</li>
+          <li><b>reverse_pointer</b></li>
+        </ul>
+      </div>
+      <div class="plane">
+        <span class="label">Prefix</span>
+        <h3>A block of them</h3>
+        <p>An address and a mask length. Keeps the address you gave it, so the same value can stand for an
+        interface; every question about the block works on the masked form.</p>
+        <ul>
+          <li><b>contains</b> · overlaps</li>
+          <li><b>hosts</b> · subnets · supernet</li>
+          <li><b>exclude</b> · broadcast</li>
+          <li><b>summarize</b> · collapse</li>
+        </ul>
+      </div>
+      <div class="plane">
+        <span class="label">AddrPort</span>
+        <h3>One end of a conversation</h3>
+        <p>Text in the form a URL or a log line uses: four dotted fields with a port, or a bracketed IPv6
+        address with one.</p>
+        <ul>
+          <li><b>parse</b> · new</li>
+          <li><b>addr</b> · port</li>
+          <li>brackets required for v6</li>
+          <li>port 0 to 65535</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="page">
+    <div class="head">
+      <div>
+        <p class="label">02 / try it</p>
+        <h2 class="section">Paste an address.</h2>
+      </div>
+      <p class="lede" style="margin:0">The answer below is worked out by this library, compiled to JavaScript and
+      running in the page — the same code that runs natively.</p>
+    </div>
+    <div class="probe" id="probe">
+      <form class="probe-row" id="probe-form" autocomplete="off">
+        <label style="flex:1;display:block" for="probe-input"><span class="label">address</span>
+          <input id="probe-input" name="address" type="text" value="192.0.2.1" spellcheck="false">
+        </label>
+        <button type="submit">read</button>
+      </form>
+      <p class="hint">fe80::1%eth0 · 2001:db8::1 · 10.1.2.3 · ::ffff:192.0.2.1</p>
+      <div class="answer" id="probe-answer">…</div>
+      <div class="tags" id="probe-tags"></div>
+      <div class="bits long" id="probe-bits" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="page">
+    <div class="head">
+      <div>
+        <p class="label">03 / install</p>
+        <h2 class="section">One line, then an address.</h2>
+      </div>
+      <p class="lede" style="margin:0">The package has no dependencies of its own. Everything below is in the
+      guide, with the output each call gives.</p>
+    </div>
+    <div class="split" style="align-items:start">
+      <div>
+        <pre class="scroll"><code>moon add moonbitstack/moonip</code></pre>
+        <pre class="scroll"><code><span class="kw">fn</span> main <span class="kw">raise</span> {
+  <span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
+  <span class="kw">for</span> host <span class="kw">in</span> block.hosts() {
+    println(host)
+    <span class="cmt">// 192.0.2.1 … 192.0.2.254</span>
+    <span class="kw">break</span>
+  }
+}</code></pre>
+      </div>
+      <div class="hero-note">
+        <p style="margin-bottom:12px">Two things worth knowing before you start:</p>
+        <p style="font-size:14px;margin-bottom:10px">A prefix keeps the address it was written with. <code>192.0.2.5/24</code>
+        is an interface on that block; <code>masked()</code> is the block itself.</p>
+        <p style="font-size:14px;margin-bottom:0">Refusals carry a reason and a position, so a typo can be pointed
+        at instead of guessed at.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div class="about">
+        <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting and classification, on every target the
+        compiler builds for.</p>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="./guide.html">Guide</a></li>
+          <li><a href="./api.html">API reference</a></li>
+          <li><a href="./explorer.html">Explorer</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul>
+          <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
+          <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
+          <li><a href="https://github.com/moonbitstack/moonip/blob/master/LICENSE">Apache-2.0</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="meta">
+      <svg class="tick-meta" width="56" height="6" viewBox="0 0 56 6" aria-hidden="true"><path class="a" d="M0 3h22"/><path class="b" d="M28 3h14"/><path class="c" d="M48 3h8"/></svg>
+      <span>Apache-2.0</span>
+      <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
+      <span>IANA special-purpose registries, 2026-10-31</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="./assets/site.js"></script>
+</body>
+</html>

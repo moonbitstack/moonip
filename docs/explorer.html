@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explorer — moonip</title>
+<meta name="description" content="Work an address and a block apart, bit by bit: the library compiled to JavaScript and running in the page.">
+<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d1013" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./assets/site.css">
+<script type="module" src="./assets/scrollbar.js"></script>
+</head>
+<body>
+<header class="top">
+  <div class="page top-in">
+    <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+    <nav class="nav">
+      <a href="./guide.html">Guide</a>
+      <a href="./api.html">API</a>
+      <a href="./explorer.html" class="on">Explorer</a>
+      <a class="gh" href="https://github.com/moonbitstack/moonip" aria-label="GitHub repository" title="GitHub">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+<main class="page explorer">
+  <section class="masthead" style="padding-bottom:22px">
+    <div class="hero-top">
+      <p class="label">Explorer · <b>the library, compiled</b></p>
+      <svg class="tick-tr" width="176" height="58" viewBox="0 0 176 58" aria-hidden="true"><path class="a" d="M40 4h136"/><path class="b" d="M74 22h102"/><path class="c" d="M108 40h68"/></svg>
+    </div>
+    <h1 class="display" style="font-size:clamp(30px,4.6vw,52px)">Every bit of it.</h1>
+    <p class="lede" style="margin-top:16px">Four panels, one library. Each answer is computed by this package
+    built to JavaScript and imported by the page — no rule is re-implemented in the browser.</p>
+  </section>
+
+  <section class="panel" id="ex-probe">
+    <div class="panel-head"><h2>Address</h2><span class="label">Addr</span></div>
+    <div class="panel-body">
+      <form id="ex-form" autocomplete="off">
+        <div class="controls">
+          <label class="field" style="flex:1" for="ex-address"><span class="label">text</span>
+            <input id="ex-address" type="text" value="2001:db8::1" spellcheck="false">
+          </label>
+          <button type="submit" form="ex-form">read</button>
+        </div>
+      </form>
+      <div class="answer mono" id="ex-answer" style="margin-bottom:10px">…</div>
+      <div class="tags" id="ex-tags" style="margin-bottom:14px"></div>
+      <div class="bits" id="ex-bits" aria-hidden="true"></div>
+      <div class="list" id="ex-details" style="margin-top:14px"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="ex-split">
+    <div class="panel-head"><h2>Split</h2><span class="label">Prefix::subnets</span></div>
+    <div class="panel-body">
+      <div class="controls">
+        <label class="field" for="split-prefix"><span class="label">block</span>
+          <input id="split-prefix" type="text" value="192.0.2.0/24" spellcheck="false">
+        </label>
+        <label class="field" for="split-bits"><span class="label">length <span class="value" id="split-value">/26</span></span>
+          <input id="split-bits" type="range" min="0" max="128" value="26" step="1">
+        </label>
+      </div>
+      <div class="list scroll" id="split-list" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="ex-range">
+    <div class="panel-head"><h2>Range</h2><span class="label">summarize</span></div>
+    <div class="panel-body">
+      <form autocomplete="off">
+        <div class="controls">
+          <label class="field" for="range-first"><span class="label">first</span>
+            <input id="range-first" type="text" value="192.0.2.0" spellcheck="false">
+          </label>
+          <label class="field" for="range-last"><span class="label">last</span>
+            <input id="range-last" type="text" value="192.0.2.130" spellcheck="false">
+          </label>
+          <button type="submit">join</button>
+        </div>
+      </form>
+      <div class="list" id="range-list"></div>
+    </div>
+  </section>
+
+  <section class="panel" id="ex-merge">
+    <div class="panel-head"><h2>Collapse</h2><span class="label">collapse</span></div>
+    <div class="panel-body">
+      <form autocomplete="off">
+        <div class="controls">
+          <label class="field" style="flex:1" for="merge-input"><span class="label">blocks, comma separated</span>
+            <input id="merge-input" type="text" value="10.0.0.0/25, 10.0.0.128/25, 10.0.1.0/24" spellcheck="false">
+          </label>
+          <button type="submit">collapse</button>
+        </div>
+      </form>
+      <div class="list" id="merge-list"></div>
+    </div>
+  </section>
+</main>
+<footer class="foot">
+  <div class="page">
+    <div class="foot-grid">
+      <div class="about">
+        <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting and classification, on every target the
+        compiler builds for.</p>
+      </div>
+      <div>
+        <h4>Pages</h4>
+        <ul>
+          <li><a href="./guide.html">Guide</a></li>
+          <li><a href="./api.html">API reference</a></li>
+          <li><a href="./explorer.html">Explorer</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Elsewhere</h4>
+        <ul>
+          <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
+          <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
+          <li><a href="https://github.com/moonbitstack/moonip/blob/master/LICENSE">Apache-2.0</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="meta">
+      <svg class="tick-meta" width="56" height="6" viewBox="0 0 56 6" aria-hidden="true"><path class="a" d="M0 3h22"/><path class="b" d="M28 3h14"/><path class="c" d="M48 3h8"/></svg>
+      <span>Apache-2.0</span>
+      <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
+      <span>IANA special-purpose registries, 2026-10-31</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="./assets/site.js"></script>
+</body>
+</html>
