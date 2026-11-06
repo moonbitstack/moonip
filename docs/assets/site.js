@@ -339,7 +339,7 @@ if (headerMap) {
 
 const topLink = document.getElementById("totop");
 if (topLink) {
-  const mark = () => topLink.classList.toggle("on", window.scrollY > 420);
+  const mark = () => topLink.classList.toggle("on", window.scrollY > 300);
   addEventListener("scroll", mark, { passive: true });
   mark();
 }
@@ -374,6 +374,11 @@ if (themeSwitch) {
       meta.setAttribute("content", colour);
     }
   };
+  // While no choice has been made, the switch follows the system as it changes.
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
+    if (!root.dataset.theme) paint();
+  });
+
   for (const button of buttons) {
     button.addEventListener("click", () => {
       root.dataset.theme = button.dataset.set;

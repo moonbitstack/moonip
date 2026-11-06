@@ -138,6 +138,38 @@ a:hover {
   background: color-mix(in srgb, var(--v4) 30%, transparent);
 }
 
+/* ---------- what a click does not do ----------
+   A header strip, a rail, a bit grid and a ladder are surfaces, not text. Dragging
+   across them should never leave a selection smear, and a long press on a phone
+   should not raise the copy sheet over a diagram. Prose, code, signatures, form
+   fields and the answer lines keep their text: those are what a reader copies. */
+
+button,
+.hdr,
+.totop,
+.rail,
+.label,
+.kicker,
+.figcap b,
+.bits,
+.hmap,
+.hmap-out,
+.encap,
+.spec,
+.tag,
+.blocks,
+.guide-nav,
+.exhibit-head,
+.frag-stage,
+.frag-side,
+.ladder,
+.chips,
+.trailer {
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+
 /* ---------- frame ---------- */
 
 .frame {
@@ -312,29 +344,12 @@ nav.nav svg {
 
 @media (width <= 620px) {
   nav.nav a {
-    padding: 0 7px;
-    font-size: 11.5px;
+    padding: 0 5px;
+    font-size: 10.5px;
   }
 
   nav.nav a.gh {
     display: none;
-  }
-
-  /* The switch leaves the strip on a phone and takes the far corner, facing the
-     top control across the bottom of the page. The navigation keeps its four
-     words instead. */
-  .themesw {
-    position: fixed;
-    left: 14px;
-    bottom: 16px;
-    z-index: 40;
-    height: 44px;
-    border: 1px solid var(--rule);
-    background: var(--field);
-  }
-
-  .themesw button {
-    padding: 0 9px;
   }
 }
 
@@ -1767,8 +1782,10 @@ footer ul a:hover {
 }
 
 /* ---------- the day / night switch ----------
-   Two positions, in the same cells the navigation uses, so it reads as another
-   field of the strip rather than a control bolted to it. */
+   Two positions, in the same cells the navigation uses, on every page: it reads as
+   another field of the strip rather than a control bolted to it. The choice is
+   written on the root and kept, so it survives a move to another page; until one
+   is made, the stylesheet's media query is what decides. */
 
 .themesw {
   display: flex;
@@ -1796,22 +1813,17 @@ footer ul a:hover {
   background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
+/* The current mode is marked with a rule, not the inverted fill the navigation
+   uses for the current page: two different "on" states should not look the same. */
 .themesw button[aria-pressed="true"] {
-  color: var(--field);
-  background: var(--ink);
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  box-shadow: inset 0 -2px 0 var(--v4);
 }
 
 .themesw button:focus-visible {
   outline: 1px solid var(--v4);
   outline-offset: -3px;
-}
-
-@media (width <= 560px) {
-  .themesw button {
-    padding: 0 7px;
-    font-size: 9px;
-    letter-spacing: 0.04em;
-  }
 }
 
 /* ---------- showcase: two instruments ---------- */
@@ -2369,6 +2381,37 @@ footer ul a:hover {
   }
 
   .hop .where {
+    display: none;
+  }
+}
+
+/* ---------- the strip on a phone ----------
+   Five words plus a switch do not fit 390 pixels at desktop sizes, so the strip
+   steps down twice: the words close up, then the switch's own cells do. Below 380
+   the wordmark gives way — the mark alone still says whose page this is. */
+
+@media (width <= 620px) {
+  .themesw button {
+    padding: 0 6px;
+    font-size: 8.5px;
+    letter-spacing: 0.06em;
+  }
+}
+
+@media (width <= 420px) {
+  nav.nav a {
+    padding: 0 4px;
+    font-size: 10px;
+  }
+}
+
+@media (width <= 380px) {
+  .hdr .brand {
+    padding: 0 10px;
+    gap: 0;
+  }
+
+  .hdr .brand .word {
     display: none;
   }
 }
