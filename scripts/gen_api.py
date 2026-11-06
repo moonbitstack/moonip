@@ -43,7 +43,10 @@ TRAIT_METHODS = {
     "to_repr",
 }
 
-TRAIT_NAMES = {"Eq", "Hash", "Compare", "Show", "Debug", "@debug.Debug"}
+EXPECTED_TYPES = ("Addr", "Prefix", "AddrPort", "Refused")
+
+# Filled while the interface is read: type name -> the traits it implements.
+TRAITS = {}
 
 
 def doc_key(signature):
@@ -75,12 +78,18 @@ def read_docs():
         if path.name.endswith(("_test.mbt", "_wbtest.mbt")):
             continue
         block = []
+        in_fence = False
         for raw in path.read_text(encoding="utf-8").splitlines():
             stripped = raw.strip()
             if stripped == "///|":
                 block = []
             elif stripped.startswith("///"):
-                block.append(stripped[3:].strip())
+                line_text = stripped[3:].strip()
+                if line_text.startswith("```"):
+                    in_fence = not in_fence
+                    continue
+                if not in_fence:
+                    block.append(line_text)
             elif stripped.startswith("pub ") or stripped.startswith("pub("):
                 key = doc_key(stripped)
                 if key:
@@ -108,8 +117,8 @@ def read_mbti():
             continue
         if stripped.startswith("pub impl"):
             match = re.match(r"pub impl (.+?) for ([A-Za-z0-9_]+)$", stripped)
-            if match and current is not None:
-                current["traits"].append(match.group(1))
+            if match:
+                TRAITS.setdefault(match.group(2), []).append(match.group(1))
             continue
         items.append({"decl": stripped, "body": [], "traits": []})
         current = items[-1]
@@ -125,9 +134,9 @@ def owner_of(decl):
 
 def tint(signature):
     s = html.escape(signature)
-    s = re.sub(r"\b(fn|let|struct|suberror)\b", r'<span class="k">\1</span>', s)
-    s = re.sub(r"\b([A-Z][A-Za-z0-9_]*)\b", r'<span class="ty">\1</span>', s)
-    s = s.replace("-&gt;", '<span class="op">-&gt;</span>')
+    s = re.sub(r"\b(fn|let|struct|suberror)\b", r'<i class="k">\1</i>', s)
+    s = re.sub(r"\b([A-Z][A-Za-z0-9_]*)\b", r'<i class="ty">\1</i>', s)
+    s = s.replace("-&gt;", '<i class="op">-&gt;</i>')
     return s
 
 
@@ -136,7 +145,7 @@ def prose(text):
 
 
 def render_type(name, doc, body, traits):
-    out = ['<div class="item" data-k="type">']
+    out = ['<div class="item">']
     out.append('<pre class="sig">pub struct %s</pre>' % html.escape(name))
     if doc:
         out.append('<p class="item-doc">%s</p>' % prose(doc))
@@ -152,9 +161,8 @@ def render_type(name, doc, body, traits):
     return "\n".join(out)
 
 
-def render_fn(decl, doc, derived):
-    label = "trait" if derived else "fn"
-    out = ['<div class="item" data-k="%s">' % label]
+def render_fn(decl, doc):
+    out = ['<div class="item">']
     out.append('<pre class="sig">%s</pre>' % tint(decl))
     if doc:
         out.append('<p class="item-doc">%s</p>' % prose(doc))
@@ -162,12 +170,91 @@ def render_fn(decl, doc, derived):
     return "\n".join(out)
 
 
+HEAD = '''<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>API reference — moonip</title>
+<meta name="description" content="Every public type, function and value in moonip, generated from the doc comments in the sources.">
+<meta name="theme-color" content="#e6e2d6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#070809" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./assets/site.css">
+<script type="module" src="./assets/scrollbar.js"></script>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="./"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+    <div class="pkt" aria-hidden="true">
+      <div class="c"><i>ver</i><b>4</b></div>
+      <div class="c"><i>ihl</i><b>5</b></div>
+      <div class="c maybe"><i>len</i><b id="hdr-len">0x0000</b></div>
+      <div class="c maybe"><i>id</i><b id="hdr-id">0x0000</b></div>
+      <div class="c"><i>ttl</i><b id="hdr-ttl">08</b></div>
+      <div class="c maybe"><i>chk</i><b id="hdr-chk">0x0000</b></div>
+    </div>
+    <nav class="nav">
+      <a href="./guide.html">Guide</a>
+      <a href="./api.html" class="on">API</a>
+      <a href="./explorer.html">Explorer</a>
+      <a class="gh" href="https://github.com/moonbitstack/moonip" aria-label="GitHub repository" title="GitHub">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+'''
+
+FOOT = '''<footer class="foot">
+  <div class="frame">
+    <div class="foot-in">
+      <div class="about">
+        <a class="brand" href="./" style="border:0;padding:0"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting, block arithmetic and
+        classification, on every target the compiler builds for.</p>
+      </div>
+      <div>
+        <h4>pages</h4>
+        <ul>
+          <li><a href="./guide.html">Guide</a></li>
+          <li><a href="./api.html">API reference</a></li>
+          <li><a href="./explorer.html">Explorer</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>elsewhere</h4>
+        <ul>
+          <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
+          <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
+          <li><a href="https://github.com/moonbitstack/moonip/blob/master/LICENSE">Apache-2.0</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="trailer">
+      <span class="eof">eof</span>
+      <span>checksum 0x<span id="foot-chk">0000</span></span>
+      <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
+      <span>IANA registries, 2026-10-31</span>
+    </div>
+  </div>
+</footer>
+
+<script type="module" src="./assets/site.js"></script>
+</body>
+</html>
+'''
+
+
 def main():
     docs = read_docs()
     items = read_mbti()
 
-    # Coverage bookkeeping: every public declaration the compiler lists has to end
-    # up on the page, so the count is compared at the end.
     seen = 0
     rendered = {type_name: [] for _, _, type_name, _ in GROUPS}
     loosely = []
@@ -180,62 +267,77 @@ def main():
         doc = docs.get(key, "")
         type_name, method = owner_of(decl)
         if method is not None:
-            bucket = type_name if type_name in rendered else None
-            if bucket is None:
+            if type_name not in rendered:
                 continue
-            derived = method in TRAIT_METHODS
-            rendered[bucket].append(render_fn(decl, doc, derived))
+            rendered[type_name].append(render_fn(decl, doc))
             seen += 1
             continue
         match = re.match(r"pub(?:\(all\))? (struct|suberror) ([A-Za-z0-9_]+)", decl)
         if match:
             name = match.group(2)
             if name in rendered:
-                rendered[name].append(render_type(name, doc, item["body"], item["traits"]))
+                rendered[name].append(
+                    render_type(name, doc, item["body"], TRAITS.get(name, []))
+                )
                 seen += 1
             continue
         loosely.append((decl, doc))
         seen += 1
 
-    body = []
-    body.append('<main>')
-    body.append('<section class="page masthead" style="padding-bottom:24px">')
-    body.append('<p class="label">Reference · <b>generated</b></p>')
-    body.append('<h1 class="display" style="font-size:clamp(30px,4.6vw,52px)">Every public name,<br>with the comment above it.</h1>')
-    body.append('<p class="lede" style="margin-top:16px">Built from the interface the compiler emits and the '
-                'doc comments in the sources, so a function that is documented is a function that is here. '
-                'One package, five groups.</p>')
-    body.append("</section>")
+    body = ["<main class=\"frame\">"]
+    body.append('<section class="row">')
+    body.append('<div class="rail"><span><b>00</b> · reference</span></div>')
+    body.append('<div class="field">')
+    body.append('<p class="kicker">Reference · generated from the interface</p>')
+    body.append(
+        '<h1 class="display" style="font-size:clamp(28px,4.6vw,54px)">Every public name,<br>with the comment above it.</h1>'
+    )
+    body.append(
+        '<p class="lede" style="margin-top:18px">Built from the interface the compiler emits and the doc '
+        "comments in the sources, so a function that is documented is a function that is here. One "
+        "package, five groups.</p>"
+    )
+    body.append('<div class="filter" style="margin-top:22px">')
+    body.append(
+        '<input id="q" type="search" placeholder="filter names" '
+        'aria-label="Filter the reference by name" autocomplete="off" spellcheck="false">'
+    )
+    body.append('<span id="hits">%d entries</span>' % seen)
+    body.append("</div>")
+    body.append("</div></section>")
 
-    body.append('<div class="page api">')
-    body.append('<aside class="apirail">')
-    body.append('<div class="search"><input id="q" type="search" placeholder="filter names" '
-                'aria-label="Filter the reference by name" autocomplete="off" spellcheck="false"></div>')
-    body.append("<nav>")
-    for anchor, title, _, _ in GROUPS:
-        body.append('<a href="#%s">%s</a>' % (anchor, title))
-    body.append('<a href="#free">Free functions</a>')
-    body.append("</nav>")
-    body.append('<p class="count" id="hits">%d entries</p>' % seen)
-    body.append("</aside>")
+    body.append('<section class="row">')
+    body.append('<div class="rail"><span><b>01</b>–<b>05</b></span></div>')
+    body.append('<div class="field">')
 
-    body.append('<div class="ref">')
+    index = 0
     for anchor, title, type_name, desc in GROUPS:
-        body.append('<section class="group" id="%s">' % anchor)
-        body.append('<div class="group-head"><h2>%s</h2><span class="no">%s</span></div>' % (title, type_name))
+        index += 1
+        body.append('<div class="ref-group" id="%s">' % anchor)
+        body.append(
+            '<div class="ref-head"><span class="no">%02d</span><h2>%s</h2>'
+            '<span class="of">%s · %d entries</span></div>'
+            % (index, title, html.escape(type_name), len(rendered[type_name]))
+        )
         body.append('<p class="group-desc">%s</p>' % prose(desc))
         body.extend(rendered[type_name])
-        body.append("</section>")
+        body.append("</div>")
 
-    body.append('<section class="group" id="free">')
-    body.append('<div class="group-head"><h2>Free functions</h2><span class="no">2</span></div>')
-    body.append('<p class="group-desc">Block arithmetic that belongs to no one type: a range joined back up, '
-                'and a set of blocks collapsed.</p>')
+    body.append('<div class="ref-group" id="free">')
+    body.append(
+        '<div class="ref-head"><span class="no">05</span><h2>Free functions</h2>'
+        '<span class="of">%d entries</span></div>' % len(loosely)
+    )
+    body.append(
+        '<p class="group-desc">Block arithmetic that belongs to no one type: a range joined back up, '
+        "and a set of blocks collapsed.</p>"
+    )
     for decl, doc in loosely:
-        body.append(render_fn(decl, doc, False))
-    body.append("</section>")
+        body.append(render_fn(decl, doc))
+    body.append("</div>")
+
     body.append('<p class="empty hidden" id="empty">Nothing here matches that.</p>')
-    body.append("</div></div></main>")
+    body.append("</div></section></main>")
 
     page = HEAD + "\n".join(body) + FOOT
     OUT.write_text(page, encoding="utf-8")
@@ -252,14 +354,12 @@ def main():
         if key is None:
             missing.append(decl)
             continue
-        if key in ("Addr", "Prefix", "AddrPort", "Refused"):
-            continue
-        if key in TRAIT_METHODS:
+        if key in EXPECTED_TYPES or key in TRAIT_METHODS:
             continue
         _, method = owner_of(decl)
         if method is not None and method in TRAIT_METHODS:
             continue
-        if key in docs or ("::" in decl and key in docs):
+        if key in docs:
             continue
         if not re.match(r"pub (fn|let)", decl):
             continue
@@ -268,78 +368,8 @@ def main():
         print("public items with no doc comment:")
         for decl in missing:
             print("  " + decl)
+        sys.exit(1)
 
-
-HEAD = """<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>API reference — moonip</title>
-<meta name="description" content="Every public type, function and value in moonip, generated from the doc comments in the sources.">
-<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1013" media="(prefers-color-scheme: dark)">
-<link rel="icon" href="./favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="./assets/site.css">
-<script type="module" src="./assets/scrollbar.js"></script>
-</head>
-<body>
-<header class="top">
-  <div class="page top-in">
-    <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
-    <nav class="nav">
-      <a href="./guide.html">Guide</a>
-      <a href="./api.html" class="on">API</a>
-      <a href="./explorer.html">Explorer</a>
-      <a class="gh" href="https://github.com/moonbitstack/moonip" aria-label="GitHub repository" title="GitHub">
-        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-      </a>
-    </nav>
-  </div>
-</header>
-"""
-
-FOOT = """<footer class="foot">
-  <div class="page">
-    <div class="foot-grid">
-      <div class="about">
-        <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
-        <p>IP addresses and networks for MoonBit: parsing, formatting and classification, on every target the
-        compiler builds for.</p>
-      </div>
-      <div>
-        <h4>Pages</h4>
-        <ul>
-          <li><a href="./guide.html">Guide</a></li>
-          <li><a href="./api.html">API reference</a></li>
-          <li><a href="./explorer.html">Explorer</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Elsewhere</h4>
-        <ul>
-          <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
-          <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
-          <li><a href="https://github.com/moonbitstack/moonip/blob/master/LICENSE">Apache-2.0</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="meta">
-      <svg class="tick-meta" width="56" height="6" viewBox="0 0 56 6" aria-hidden="true"><path class="a" d="M0 3h22"/><path class="b" d="M28 3h14"/><path class="c" d="M48 3h8"/></svg>
-      <span>Apache-2.0</span>
-      <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
-      <span>IANA special-purpose registries, 2026-10-31</span>
-    </div>
-  </div>
-</footer>
-
-<script type="module" src="./assets/site.js"></script>
-</body>
-</html>
-"""
 
 if __name__ == "__main__":
     main()

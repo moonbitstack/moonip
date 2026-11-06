@@ -5,19 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Guide — moonip</title>
 <meta name="description" content="A guided tour of moonip: reading addresses, writing them back, working out blocks, and classifying what is reachable.">
-<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1013" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e2d6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#070809" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="./assets/site.css">
 <script type="module" src="./assets/scrollbar.js"></script>
 </head>
 <body>
-<header class="top">
-  <div class="page top-in">
-    <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="./"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+    <div class="pkt" aria-hidden="true">
+      <div class="c"><i>ver</i><b>4</b></div>
+      <div class="c"><i>ihl</i><b>5</b></div>
+      <div class="c maybe"><i>len</i><b id="hdr-len">0x0000</b></div>
+      <div class="c maybe"><i>id</i><b id="hdr-id">0x0000</b></div>
+      <div class="c"><i>ttl</i><b id="hdr-ttl">08</b></div>
+      <div class="c maybe"><i>chk</i><b id="hdr-chk">0x0000</b></div>
+    </div>
     <nav class="nav">
       <a href="./guide.html" class="on">Guide</a>
       <a href="./api.html">API</a>
@@ -29,47 +38,45 @@
   </div>
 </header>
 
-<main class="page">
-  <section class="masthead" style="padding-bottom:18px">
-    <p class="label">Guide</p>
-    <h1 class="display" style="font-size:clamp(32px,4.6vw,54px)">From text to a block<br>and back again.</h1>
-    <p class="lede" style="margin-top:18px">Ten steps, each with the output it gives. Everything here is
-    in one package; nothing needs a socket.</p>
+<main class="frame">
+  <section class="row">
+    <div class="rail"><span><b>00</b> · guide</span></div>
+    <div class="field">
+      <p class="kicker">Ten steps · every output real</p>
+      <h1 class="display" style="font-size:clamp(30px,5vw,60px)">From text<br>to a block<br>and back.</h1>
+      <p class="lede" style="margin-top:18px">Each step carries the output it gives. Everything here is in
+      one package and needs no socket.</p>
+      <nav class="guide-nav" aria-label="Steps" style="margin-top:24px">
+        <a href="#s01"><b>01</b>Install it</a>
+        <a href="#s02"><b>02</b>Read an address</a>
+        <a href="#s03"><b>03</b>When it refuses</a>
+        <a href="#s04"><b>04</b>Zones and the two families</a>
+        <a href="#s05"><b>05</b>Bytes in, bytes out</a>
+        <a href="#s06"><b>06</b>A block</a>
+        <a href="#s07"><b>07</b>Walk a block</a>
+        <a href="#s08"><b>08</b>Split, join, cut</a>
+        <a href="#s09"><b>09</b>Classify</a>
+        <a href="#s10"><b>10</b>An address with a port</a>
+      </nav>
+    </div>
   </section>
-  <div class="guide">
-    <nav aria-label="Steps">
-      <ol>
-        <li><a href="#s01">Install it</a></li>
-        <li><a href="#s02">Read an address</a></li>
-        <li><a href="#s03">When it refuses</a></li>
-        <li><a href="#s04">Zones and the two families</a></li>
-        <li><a href="#s05">Bytes in, bytes out</a></li>
-        <li><a href="#s06">A block</a></li>
-        <li><a href="#s07">Walk a block</a></li>
-        <li><a href="#s08">Split, join, cut</a></li>
-        <li><a href="#s09">Classify</a></li>
-        <li><a href="#s10">An address with a port</a></li>
-      </ol>
-    </nav>
-    <div>
-<section class="step" id="s01">
-<p class="label">01</p>
-<h2>Install it</h2>
+
+  <section class="row">
+    <div class="rail"><span><b>01</b>–<b>10</b></span></div>
+    <div class="field">
+<section class="step" id="s01"><div class="n">step 01</div><h2>Install it</h2>
 <p>Add the package. It depends on nothing but the standard library, and it does no I/O, so it compiles
 for every target the compiler has.</p>
-<pre class="scroll"><code>moon add moonbitstack/moonip</code></pre>
-<p>Then import it in the package that needs it:</p>
-<pre class="scroll"><code>import {
+<div class="sh">moon add moonbitstack/moonip</div>
+<p>Then import it where it is used:</p>
+<div class="code"><div class="code-bar"><span>moon.pkg</span><span class="r">moonbit</span></div><pre><code>import {
   "moonbitstack/moonip",
-}</code></pre>
-</section>
-<section class="step" id="s02">
-<p class="label">02</p>
-<h2>Read an address</h2>
-<p><code>Addr::parse</code> takes the text forms of RFC 4291 and gives back a value. It refuses anything
-ambiguous: a leading zero in an IPv4 field would read as octal to some resolvers, so it is an error
-here rather than a guess.</p>
-<pre class="scroll"><code><span class="kw">fn</span> main <span class="kw">raise</span> {
+}</code></pre></div></section>
+<section class="step" id="s02"><div class="n">step 02</div><h2>Read an address</h2>
+<p><code>Addr::parse</code> takes the text forms of RFC 4291. It refuses anything ambiguous: a leading
+zero in an IPv4 field would read as octal to some resolvers, so it is an error here rather than a
+guess.</p>
+<div class="code"><div class="code-bar"><span>main.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">fn</span> main <span class="kw">raise</span> {
   <span class="kw">let</span> a = @moonip.Addr::parse(<span class="str">"2001:0DB8:0000:0000:0000:0000:0000:0001"</span>)
   println(a)                     <span class="cmt">// 2001:db8::1</span>
   println(a.exploded())          <span class="cmt">// 2001:0db8:0000:0000:0000:0000:0000:0001</span>
@@ -78,7 +85,7 @@ here rather than a guess.</p>
   <span class="kw">let</span> b = @moonip.Addr::parse(<span class="str">"192.0.2.1"</span>)
   println(b.bits())              <span class="cmt">// 32</span>
   println(b.mapped())            <span class="cmt">// ::ffff:192.0.2.1</span>
-}</code></pre>
+}</code></pre></div>
 <div class="out"><span class="what">out</span>2001:db8::1
 2001:0db8:0000:0000:0000:0000:0000:0001
 128
@@ -86,14 +93,11 @@ here rather than a guess.</p>
 ::ffff:192.0.2.1</div>
 <p>The canonical form is RFC 5952's: lower case, no leading zeros in a group, the longest run of zero
 groups replaced by <code>::</code>, the leftmost run when two are the same length, and an IPv4-mapped
-address written with its four dotted fields at the end.</p>
-</section>
-<section class="step" id="s03">
-<p class="label">03</p>
-<h2>When it refuses</h2>
-<p>Every call that can refuse raises <code>Refused</code>, and the variants say which kind of mistake it
-was and where.</p>
-<pre class="scroll"><code><span class="kw">fn</span> why(text : String) -> String {
+address written with its four dotted fields at the end.</p></section>
+<section class="step" id="s03"><div class="n">step 03</div><h2>When it refuses</h2>
+<p>Every call that can refuse raises <code>Refused</code>, and the variant says which kind of mistake
+it was and where.</p>
+<div class="code"><div class="code-bar"><span>why.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">fn</span> why(text : String) -> String {
   <span class="kw">try</span> {
     <span class="kw">let</span> addr = @moonip.Addr::parse(text)
     <span class="str">"read as "</span> + addr.to_string()
@@ -103,76 +107,63 @@ was and where.</p>
       got.to_string() + <span class="str">" does not fit in "</span> + limit.to_string()
     _ => <span class="str">"refused"</span>
   }
-}</code></pre>
-<div class="out"><span class="what">out</span>why(&quot;192.0.2.1&quot;)      read as 192.0.2.1
-why(&quot;192.0.2.256&quot;)    256 does not fit in 255
-why(&quot;1.2.3.4.5&quot;)      nothing readable at 7</div>
-<p><code>Malformed(at=…)</code> counts characters from zero, so a caller can underline the exact place.
-<code>OutOfRange(limit=…, got=…)</code> is for a number that was well formed and too big.</p>
-</section>
-<section class="step" id="s04">
-<p class="label">04</p>
-<h2>Zones and the two families</h2>
+}</code></pre></div>
+<div class="out"><span class="what">out</span>why("192.0.2.1")      read as 192.0.2.1
+why("192.0.2.256")    256 does not fit in 255
+why("1.2.3.4.5")      nothing readable at 7</div>
+<p><code>Malformed(at=…)</code> counts characters from zero, so a caller can point at the exact place.
+<code>OutOfRange(limit=…, got=…)</code> is for a number that was well formed and too big.</p></section>
+<section class="step" id="s04"><div class="n">step 04</div><h2>Zones and the two families</h2>
 <p>An IPv6 link-local address can carry a zone: the interface it is reachable through. It is part of the
-value, part of the text, and it survives <code>next</code> and <code>prev</code> because a neighbour is on
-the same link.</p>
-<pre class="scroll"><code><span class="kw">let</span> link = @moonip.Addr::parse(<span class="str">"fe80::1%eth0"</span>)
-println(link.zone())          <span class="cmt">// Some("eth0")</span>
-println(link.next())          <span class="cmt">// Some(fe80::2%eth0)</span>
-println(link.is_link_local()) <span class="cmt">// true</span>
-println(link.encode().length()) <span class="cmt">// 16 — a zone is not part of the address</span>
+value, part of the text, and it survives <code>next</code> and <code>prev</code> because a neighbour is
+on the same link.</p>
+<div class="code"><div class="code-bar"><span>zone.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> link = @moonip.Addr::parse(<span class="str">"fe80::1%eth0"</span>)
+println(link.zone())            <span class="cmt">// Some("eth0")</span>
+println(link.next())            <span class="cmt">// Some(fe80::2%eth0)</span>
+println(link.is_link_local())   <span class="cmt">// true</span>
+println(link.encode().length()) <span class="cmt">// 16, a zone is not part of the address</span>
 
-<span class="cmt">// A mapped address is IPv6 until you ask for the IPv4 one inside it.</span>
 <span class="kw">let</span> mapped = @moonip.Addr::parse(<span class="str">"::ffff:192.0.2.1"</span>)
-println(mapped.is_v6())       <span class="cmt">// true</span>
-println(mapped.unmap())       <span class="cmt">// 192.0.2.1</span></code></pre>
-<div class="out"><span class="what">out</span>Some(&quot;eth0&quot;)
+println(mapped.is_v6())         <span class="cmt">// true</span>
+println(mapped.unmap())         <span class="cmt">// 192.0.2.1</span></code></pre></div>
+<div class="out"><span class="what">out</span>Some("eth0")
 Some(fe80::2%eth0)
 true
 16
 true
 192.0.2.1</div>
-<p>Classification asks about the address a packet would be routed to, so an IPv4-mapped address is judged
-by the IPv4 address inside it — the same rule the kernel applies.</p>
-</section>
-<section class="step" id="s05">
-<p class="label">05</p>
-<h2>Bytes in, bytes out</h2>
+<p>Classification asks about the address a packet would be routed to, so an IPv4-mapped address is
+judged by the IPv4 address inside it — the same rule the kernel applies.</p></section>
+<section class="step" id="s05"><div class="n">step 05</div><h2>Bytes in, bytes out</h2>
 <p>Every wire format wants the four or sixteen bytes, not the text. <code>encode</code> writes them
 big-endian and <code>decode</code> reads them back.</p>
-<pre class="scroll"><code><span class="kw">let</span> a = @moonip.Addr::parse(<span class="str">"192.0.2.1"</span>)
+<div class="code"><div class="code-bar"><span>bytes.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> a = @moonip.Addr::parse(<span class="str">"192.0.2.1"</span>)
 <span class="kw">let</span> raw = a.encode()
 println(raw.length())                    <span class="cmt">// 4</span>
 println(@moonip.Addr::decode(raw) == a)  <span class="cmt">// true</span>
 
-<span class="cmt">// A certificate's iPAddress option holds exactly this.</span>
 <span class="kw">let</span> v6 = @moonip.Addr::parse(<span class="str">"2001:db8::1"</span>)
-println(v6.encode().length())            <span class="cmt">// 16</span></code></pre>
+println(v6.encode().length())            <span class="cmt">// 16</span></code></pre></div>
 <div class="out"><span class="what">out</span>4
 true
 16</div>
 <p><code>decode</code> refuses a byte string that is neither four nor sixteen bytes long, with
-<code>Length(want=16, got=…)</code>.</p>
-</section>
-<section class="step" id="s06">
-<p class="label">06</p>
-<h2>A block</h2>
-<p>A <code>Prefix</code> is an address and a mask length. It keeps the address it was written with, so the
-same value can stand for an interface on that block; the questions about the block itself work on
+<code>Length(want=16, got=…)</code>.</p></section>
+<section class="step" id="s06"><div class="n">step 06</div><h2>A block</h2>
+<p>A <code>Prefix</code> is an address and a mask length. It keeps the address it was written with, so
+the same value can stand for an interface on that block; the questions about the block itself work on
 <code>masked()</code>.</p>
-<pre class="scroll"><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
+<div class="code"><div class="code-bar"><span>block.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
 println(block)                    <span class="cmt">// 192.0.2.0/24</span>
 println(block.netmask())          <span class="cmt">// 255.255.255.0</span>
 println(block.hostmask())         <span class="cmt">// 0.0.0.255</span>
 println(block.broadcast())        <span class="cmt">// Some(192.0.2.255)</span>
 println(block.contains(@moonip.Addr::parse(<span class="str">"192.0.2.7"</span>)))  <span class="cmt">// true</span>
 
-<span class="cmt">// Host bits are refused by default; strict=false clears them instead.</span>
 <span class="kw">let</span> link = @moonip.Prefix::parse(<span class="str">"192.0.2.5/24"</span>, strict=<span class="kw">false</span>)
 println(link)                     <span class="cmt">// 192.0.2.0/24</span>
 
-<span class="cmt">// IPv6 has no broadcast: the top of a block is an ordinary address.</span>
-println(@moonip.Prefix::parse(<span class="str">"2001:db8::/32"</span>).broadcast())  <span class="cmt">// None</span></code></pre>
+println(@moonip.Prefix::parse(<span class="str">"2001:db8::/32"</span>).broadcast())  <span class="cmt">// None</span></code></pre></div>
 <div class="out"><span class="what">out</span>192.0.2.0/24
 255.255.255.0
 0.0.0.255
@@ -180,32 +171,27 @@ Some(192.0.2.255)
 true
 192.0.2.0/24
 None</div>
-<p>A prefix written by hand often carries host bits; <code>Prefix::new</code> keeps them, so
-<code>Prefix::new(@moonip.Addr::parse("192.0.2.5"), 24)</code> is the interface form and its
-<code>masked()</code> is the block.</p>
-</section>
-<section class="step" id="s07">
-<p class="label">07</p>
-<h2>Walk a block</h2>
+<p>Host bits are refused by default and cleared with <code>strict=false</code>. <code>Prefix::new</code>
+keeps them, so <code>Prefix::new(@moonip.Addr::parse("192.0.2.5"), 24)</code> is the interface form and
+<code>masked()</code> is the block.</p></section>
+<section class="step" id="s07"><div class="n">step 07</div><h2>Walk a block</h2>
 <p><code>hosts()</code> is the addresses an interface can be given: everything except the network and
-broadcast addresses for IPv4, and except the subnet-router anycast address for IPv6. A <code>/31</code> and
-a <code>/127</code> keep both their addresses, because both ends of a point-to-point link are usable
-(RFC 3021, RFC 6164). The iterator is lazy — walking a <code>/0</code> is possible and takes a while.</p>
-<pre class="scroll"><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/30"</span>)
+broadcast addresses for IPv4, and except the subnet-router anycast address for IPv6. A <code>/31</code>
+and a <code>/127</code> keep both their addresses, because both ends of a point-to-point link are usable
+(RFC 3021, RFC 6164). The iterator is lazy — walking a <code>/0</code> is possible and takes a
+while.</p>
+<div class="code"><div class="code-bar"><span>hosts.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/30"</span>)
 <span class="kw">for</span> host <span class="kw">in</span> block.hosts() {
   println(host)
 }
-println(@moonip.Prefix::parse(<span class="str">"192.0.2.0/31"</span>).hosts().collect().length())  <span class="cmt">// 2</span></code></pre>
+println(@moonip.Prefix::parse(<span class="str">"192.0.2.0/31"</span>).hosts().collect().length())  <span class="cmt">// 2</span></code></pre></div>
 <div class="out"><span class="what">out</span>192.0.2.1
 192.0.2.2
-2</div>
-</section>
-<section class="step" id="s08">
-<p class="label">08</p>
-<h2>Split, join, cut</h2>
-<p>Four operations cover most of the arithmetic: splitting a block into smaller ones, joining a range back
-into the fewest blocks, cutting a block out of another, and collapsing a set.</p>
-<pre class="scroll"><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
+2</div></section>
+<section class="step" id="s08"><div class="n">step 08</div><h2>Split, join, cut</h2>
+<p>Four operations cover most of the arithmetic: splitting a block into smaller ones, joining a range
+back into the fewest blocks, cutting a block out of another, and collapsing a set.</p>
+<div class="code"><div class="code-bar"><span>blocks.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
 
 <span class="kw">for</span> part <span class="kw">in</span> block.subnets(bits=<span class="kw">26</span>) {
   println(part)
@@ -225,7 +211,7 @@ into the fewest blocks, cutting a block out of another, and collapsing a set.</p
 }
 <span class="cmt">// 192.0.2.128/25  192.0.2.0/26</span>
 
-println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 192.0.0.0/16</span></code></pre>
+println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 192.0.0.0/16</span></code></pre></div>
 <div class="out"><span class="what">out</span>192.0.2.0/26
 192.0.2.64/26
 192.0.2.128/26
@@ -238,16 +224,13 @@ println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 1
 192.0.0.0/16</div>
 <p><code>exclude</code> answers with the exact difference even when the block being cut out does not sit
 inside, so it never has to refuse: a block that merely touches the edge leaves it whole, and one that
-covers it leaves nothing. <code>collapse</code> takes a list and returns the fewest blocks holding the same
-addresses, IPv4 first, then IPv6.</p>
-</section>
-<section class="step" id="s09">
-<p class="label">09</p>
-<h2>Classify</h2>
+covers it leaves nothing. <code>collapse</code> takes a list and returns the fewest blocks holding the
+same addresses, IPv4 first, then IPv6.</p></section>
+<section class="step" id="s09"><div class="n">step 09</div><h2>Classify</h2>
 <p>The predicates follow the two IANA special-purpose address registries. <code>is_private</code> means
 "a registry marks this as not globally reachable", which is wider than the three RFC 1918 blocks: it
 includes loopback, link local, documentation and benchmarking ranges too.</p>
-<pre class="scroll"><code><span class="kw">let</span> samples = [
+<div class="code"><div class="code-bar"><span>classify.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> samples = [
   <span class="str">"10.1.2.3"</span>, <span class="str">"100.64.0.1"</span>, <span class="str">"8.8.8.8"</span>, <span class="str">"192.0.2.1"</span>,
   <span class="str">"fc00::1"</span>, <span class="str">"2001:4860::1"</span>, <span class="str">"2001:db8::1"</span>,
 ]
@@ -257,7 +240,7 @@ includes loopback, link local, documentation and benchmarking ranges too.</p>
     text + <span class="str">"  private="</span> + a.is_private().to_string() +
     <span class="str">"  global="</span> + a.is_global().to_string(),
   )
-}</code></pre>
+}</code></pre></div>
 <div class="out"><span class="what">out</span>10.1.2.3         private=true   global=false
 100.64.0.1       private=false  global=false
 8.8.8.8          private=false  global=true
@@ -266,41 +249,38 @@ fc00::1          private=true   global=false
 2001:4860::1     private=false  global=true
 2001:db8::1      private=true   global=false</div>
 <p>Shared address space, <code>100.64.0.0/10</code>, is the one block that is neither private nor
-reachable, and it answers false to both questions. The other predicates — <code>is_loopback</code>,
+reachable: it answers false to both questions. The other predicates — <code>is_loopback</code>,
 <code>is_unspecified</code>, <code>is_multicast</code>, <code>is_link_local</code>,
-<code>is_site_local</code>, <code>is_reserved</code> — are the rows of the registry, one for one.</p>
-</section>
-<section class="step" id="s10">
-<p class="label">10</p>
-<h2>An address with a port</h2>
+<code>is_site_local</code>, <code>is_reserved</code> — are the rows of the registry, one for one.</p></section>
+<section class="step" id="s10"><div class="n">step 10</div><h2>An address with a port</h2>
 <p><code>AddrPort</code> reads the form a URL or a log line uses. Brackets are what tells the last colon
 apart from the ones inside an IPv6 address, so an unbracketed IPv6 address with a port is refused rather
 than guessed at.</p>
-<pre class="scroll"><code><span class="kw">let</span> end = @moonip.AddrPort::parse(<span class="str">"[2001:db8::1]:443"</span>)
+<div class="code"><div class="code-bar"><span>port.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> end = @moonip.AddrPort::parse(<span class="str">"[2001:db8::1]:443"</span>)
 println(end)        <span class="cmt">// [2001:db8::1]:443</span>
 println(end.port()) <span class="cmt">// 443</span>
 println(end.addr()) <span class="cmt">// 2001:db8::1</span>
 
 <span class="kw">let</span> local = @moonip.AddrPort::parse(<span class="str">"192.0.2.1:8080"</span>)
-println(local)      <span class="cmt">// 192.0.2.1:8080</span></code></pre>
+println(local)      <span class="cmt">// 192.0.2.1:8080</span></code></pre></div>
 <div class="out"><span class="what">out</span>[2001:db8::1]:443
 443
 2001:db8::1
-192.0.2.1:8080</div>
-</section>
+192.0.2.1:8080</div></section>
     </div>
-  </div>
+  </section>
 </main>
+
 <footer class="foot">
-  <div class="page">
-    <div class="foot-grid">
+  <div class="frame">
+    <div class="foot-in">
       <div class="about">
-        <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
-        <p>IP addresses and networks for MoonBit: parsing, formatting and classification, on every target the
-        compiler builds for.</p>
+        <a class="brand" href="./" style="border:0;padding:0"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting, block arithmetic and
+        classification, on every target the compiler builds for.</p>
       </div>
       <div>
-        <h4>Pages</h4>
+        <h4>pages</h4>
         <ul>
           <li><a href="./guide.html">Guide</a></li>
           <li><a href="./api.html">API reference</a></li>
@@ -308,7 +288,7 @@ println(local)      <span class="cmt">// 192.0.2.1:8080</span></code></pre>
         </ul>
       </div>
       <div>
-        <h4>Elsewhere</h4>
+        <h4>elsewhere</h4>
         <ul>
           <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
           <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
@@ -316,11 +296,11 @@ println(local)      <span class="cmt">// 192.0.2.1:8080</span></code></pre>
         </ul>
       </div>
     </div>
-    <div class="meta">
-      <svg class="tick-meta" width="56" height="6" viewBox="0 0 56 6" aria-hidden="true"><path class="a" d="M0 3h22"/><path class="b" d="M28 3h14"/><path class="c" d="M48 3h8"/></svg>
-      <span>Apache-2.0</span>
+    <div class="trailer">
+      <span class="eof">eof</span>
+      <span>checksum 0x<span id="foot-chk">0000</span></span>
       <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
-      <span>IANA special-purpose registries, 2026-10-31</span>
+      <span>IANA registries, 2026-10-31</span>
     </div>
   </div>
 </footer>

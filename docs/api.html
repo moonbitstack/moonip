@@ -5,19 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>API reference — moonip</title>
 <meta name="description" content="Every public type, function and value in moonip, generated from the doc comments in the sources.">
-<meta name="theme-color" content="#f5f2ea" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0d1013" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e2d6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#070809" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="./favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="./assets/site.css">
 <script type="module" src="./assets/scrollbar.js"></script>
 </head>
 <body>
-<header class="top">
-  <div class="page top-in">
-    <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="./"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+    <div class="pkt" aria-hidden="true">
+      <div class="c"><i>ver</i><b>4</b></div>
+      <div class="c"><i>ihl</i><b>5</b></div>
+      <div class="c maybe"><i>len</i><b id="hdr-len">0x0000</b></div>
+      <div class="c maybe"><i>id</i><b id="hdr-id">0x0000</b></div>
+      <div class="c"><i>ttl</i><b id="hdr-ttl">08</b></div>
+      <div class="c maybe"><i>chk</i><b id="hdr-chk">0x0000</b></div>
+    </div>
     <nav class="nav">
       <a href="./guide.html">Guide</a>
       <a href="./api.html" class="on">API</a>
@@ -28,353 +37,352 @@
     </nav>
   </div>
 </header>
-<main>
-<section class="page masthead" style="padding-bottom:24px">
-<p class="label">Reference · <b>generated</b></p>
-<h1 class="display" style="font-size:clamp(30px,4.6vw,52px)">Every public name,<br>with the comment above it.</h1>
-<p class="lede" style="margin-top:16px">Built from the interface the compiler emits and the doc comments in the sources, so a function that is documented is a function that is here. One package, five groups.</p>
-</section>
-<div class="page api">
-<aside class="apirail">
-<div class="search"><input id="q" type="search" placeholder="filter names" aria-label="Filter the reference by name" autocomplete="off" spellcheck="false"></div>
-<nav>
-<a href="#addr">Address</a>
-<a href="#prefix">Block</a>
-<a href="#addrport">Address and port</a>
-<a href="#refused">Refusal</a>
-<a href="#free">Free functions</a>
-</nav>
-<p class="count" id="hits">94 entries</p>
-</aside>
-<div class="ref">
-<section class="group" id="addr">
-<div class="group-head"><h2>Address</h2><span class="no">Addr</span></div>
+<main class="frame">
+<section class="row">
+<div class="rail"><span><b>00</b> · reference</span></div>
+<div class="field">
+<p class="kicker">Reference · generated from the interface</p>
+<h1 class="display" style="font-size:clamp(28px,4.6vw,54px)">Every public name,<br>with the comment above it.</h1>
+<p class="lede" style="margin-top:18px">Built from the interface the compiler emits and the doc comments in the sources, so a function that is documented is a function that is here. One package, five groups.</p>
+<div class="filter" style="margin-top:22px">
+<input id="q" type="search" placeholder="filter names" aria-label="Filter the reference by name" autocomplete="off" spellcheck="false">
+<span id="hits">94 entries</span>
+</div>
+</div></section>
+<section class="row">
+<div class="rail"><span><b>01</b>–<b>05</b></span></div>
+<div class="field">
+<div class="ref-group" id="addr">
+<div class="ref-head"><span class="no">01</span><h2>Address</h2><span class="of">Addr · 40 entries</span></div>
 <p class="group-desc">One address: IPv4 or IPv6, with the zone a scoped IPv6 address may carry.</p>
-<div class="item" data-k="type">
+<div class="item">
 <pre class="sig">pub struct Addr</pre>
 <p class="item-doc">An IPv4 or IPv6 address, and the zone an IPv6 scoped address may carry.  The value never changes once made, compares by its bits, and can be a key in a map. IPv4 keeps its 32 bits in the low word with <code>v4</code> set, so <code>1.2.3.4</code> and <code>::1.2.3.4</code> are two different addresses that never compare equal.</p>
 <pre class="type-body">  hi : UInt64
   lo : UInt64
   v4 : Bool
   zone : String?</pre>
+<p class="item-doc"><span class="label">also</span> @debug.Debug, Compare, Eq, Hash, Show</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::bits(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::bits(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 <p class="item-doc">How many bits the address has: 32 for IPv4, 128 for IPv6.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::compare(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::compare(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::decode(<span class="ty">BytesView</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::decode(<i class="ty">BytesView</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
 <p class="item-doc">Read the address back from four (IPv4) or sixteen (IPv6) bytes.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::encode(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bytes</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::encode(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bytes</i></pre>
 <p class="item-doc">The four or sixteen bytes of the address, big-endian, the way a packet or a certificate option carries them. A zone is not part of the address and is not written.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::exploded(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
-<p class="item-doc">Every group written out in full, four hexadecimal digits each, with nothing compressed. Handy for anything that compares text rather than reads it: two addresses are equal exactly when their exploded forms are.  ``<code>mbt check test { assert_eq( @moonip.Addr::parse(&quot;2001:db8::1&quot;).exploded(), &quot;2001:0db8:0000:0000:0000:0000:0000:0001&quot;, ) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::exploded(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
+<p class="item-doc">Every group written out in full, four hexadecimal digits each, with nothing compressed. Handy for anything that compares text rather than reads it: two addresses are equal exactly when their exploded forms are.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::hash(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::hash(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::hash_combine(<span class="ty">Self</span>, <span class="ty">Hasher</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::hash_combine(<i class="ty">Self</i>, <i class="ty">Hasher</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_global(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
-<p class="item-doc">Whether the address is globally reachable: the opposite of <code>is_private</code>, except for shared address space <code>100.64.0.0/10</code>, which is neither private nor reachable and so answers false to both.  ``<code>mbt check test { assert_true(@moonip.Addr::parse(&quot;8.8.8.8&quot;).is_global()) assert_true(@moonip.Addr::parse(&quot;2001:4860::1&quot;).is_global()) assert_false(@moonip.Addr::parse(&quot;100.64.0.1&quot;).is_global()) assert_false(@moonip.Addr::parse(&quot;100.64.0.1&quot;).is_private()) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_global(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether the address is globally reachable: the opposite of <code>is_private</code>, except for shared address space <code>100.64.0.0/10</code>, which is neither private nor reachable and so answers false to both.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_link_local(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_link_local(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is a link-local address: <code>169.254.0.0/16</code> for IPv4 (RFC 3927), <code>fe80::/10</code> for IPv6.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_loopback(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_loopback(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is a loopback address: <code>127.0.0.0/8</code> for IPv4, <code>::1</code> for IPv6.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_multicast(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_multicast(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is a multicast address: <code>224.0.0.0/4</code> for IPv4, <code>ff00::/8</code> for IPv6.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_private(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
-<p class="item-doc">Whether the address sits in a block the IANA registries mark as not globally reachable: the private-use ranges, loopback, link local, documentation, benchmarking and the rest, with the IPv6 exceptions the registry itself names.  ``<code>mbt check test { assert_true(@moonip.Addr::parse(&quot;10.1.2.3&quot;).is_private()) assert_false(@moonip.Addr::parse(&quot;8.8.8.8&quot;).is_private()) assert_true(@moonip.Addr::parse(&quot;fd00::1&quot;).is_private()) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_private(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether the address sits in a block the IANA registries mark as not globally reachable: the private-use ranges, loopback, link local, documentation, benchmarking and the rest, with the IPv6 exceptions the registry itself names.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_reserved(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_reserved(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this address is reserved for a purpose other than unicast: <code>240.0.0.0/4</code> for IPv4, and for IPv6 every block outside <code>2000::/3</code> and <code>fe80::/10</code> (RFC 4291 section 2.4).</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_site_local(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_site_local(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is a deprecated site-local address, <code>fec0::/10</code> (RFC 3879). IPv4 has no such thing, so it is always false there.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_unspecified(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_unspecified(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is the unspecified address, <code>0.0.0.0</code> or <code>::</code>. An IPv4-mapped address is judged by the IPv4 address inside it, like every other question here.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_v4(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_v4(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is an IPv4 address.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_v4_mapped(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_v4_mapped(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is an IPv4-mapped IPv6 address, that is, one in <code>::ffff:0:0/96</code>.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::is_v6(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_v6(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is an IPv6 address. An IPv4-mapped address such as <code>::ffff:192.0.2.1</code> is IPv6 here; <code>unmap</code> is how it becomes IPv4.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::mapped(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::mapped(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">The IPv4-mapped IPv6 form of an IPv4 address; a real IPv6 address comes back unchanged.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::next(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span>?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::next(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i>?</pre>
 <p class="item-doc">The next address, or <code>None</code> at the top of the family.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::not_equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::not_equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::op_ge(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::op_ge(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::op_gt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::op_gt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::op_le(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::op_le(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::op_lt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::op_lt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::output(<span class="ty">Self</span>, &amp;<span class="ty">Logger</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::output(<i class="ty">Self</i>, &amp;<i class="ty">Logger</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::parse(<span class="ty">StringView</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::parse(<i class="ty">StringView</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
 <p class="item-doc">Read an address out of its text form: four dotted decimal fields, or the colon form of RFC 4291 with an optional <code>%zone</code>.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::prev(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span>?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::prev(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i>?</pre>
 <p class="item-doc">The address before this one, or <code>None</code> at the bottom of the family.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::reverse_pointer(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
-<p class="item-doc">The name this address has in the reverse DNS tree: <code>4.3.2.1.in-addr.arpa</code> for IPv4, and the thirty-two nibbles of the address in reverse order under <code>ip6.arpa</code> for IPv6 (RFC 3596).  ``<code>mbt check test { assert_eq( @moonip.Addr::parse(&quot;192.0.2.1&quot;).reverse_pointer(), &quot;1.2.0.192.in-addr.arpa&quot;, ) assert_eq( @moonip.Addr::parse(&quot;::1&quot;).reverse_pointer(), &quot;1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa&quot;, ) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::reverse_pointer(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
+<p class="item-doc">The name this address has in the reverse DNS tree: <code>4.3.2.1.in-addr.arpa</code> for IPv4, and the thirty-two nibbles of the address in reverse order under <code>ip6.arpa</code> for IPv6 (RFC 3596).</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::sixtofour(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span>?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::sixtofour(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i>?</pre>
 <p class="item-doc">The IPv4 address carried by a 6to4 address, <code>2002::/16</code> (RFC 3056).</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::teredo(<span class="ty">Self</span>) <span class="op">-&gt;</span> (<span class="ty">Self</span>, <span class="ty">Self</span>)?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::teredo(<i class="ty">Self</i>) <i class="op">-&gt;</i> (<i class="ty">Self</i>, <i class="ty">Self</i>)?</pre>
 <p class="item-doc">The server and client addresses carried by a Teredo address, <code>2001::/32</code> (RFC 4380). The client is stored inverted (RFC 5991), so the last 32 bits are read as a complement.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::to_repr(<span class="ty">Self</span>) <span class="op">-&gt;</span> @debug.<span class="ty">Repr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::to_repr(<i class="ty">Self</i>) <i class="op">-&gt;</i> @debug.<i class="ty">Repr</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::to_string(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::to_string(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::unmap(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::unmap(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">The IPv4 address inside an IPv4-mapped IPv6 one; anything else comes back unchanged. The zone goes with the IPv6 form and is dropped.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::v4(<span class="ty">Byte</span>, <span class="ty">Byte</span>, <span class="ty">Byte</span>, <span class="ty">Byte</span>) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::v4(<i class="ty">Byte</i>, <i class="ty">Byte</i>, <i class="ty">Byte</i>, <i class="ty">Byte</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">An IPv4 address from its four octets.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::v6(<span class="ty">UInt64</span>, <span class="ty">UInt64</span>) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::v6(<i class="ty">UInt64</i>, <i class="ty">UInt64</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">An IPv6 address from its two halves: <code>hi</code> the top 64 bits, <code>lo</code> the bottom 64.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::with_zone(<span class="ty">Self</span>, <span class="ty">String</span>?) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::with_zone(<i class="ty">Self</i>, <i class="ty">String</i>?) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">The same address on another zone. A zone only means something to a scoped IPv6 address, so on IPv4 this returns the address unchanged.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Addr</span>::zone(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span>?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::zone(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i>?</pre>
 <p class="item-doc">The zone (RFC 4007), when the address came with one.</p>
 </div>
-</section>
-<section class="group" id="prefix">
-<div class="group-head"><h2>Block</h2><span class="no">Prefix</span></div>
+</div>
+<div class="ref-group" id="prefix">
+<div class="ref-head"><span class="no">02</span><h2>Block</h2><span class="of">Prefix · 28 entries</span></div>
 <p class="group-desc">An address and a mask length. Keeps the address it was written with.</p>
-<div class="item" data-k="type">
+<div class="item">
 <pre class="sig">pub struct Prefix</pre>
 <p class="item-doc">A network: an address and the number of leading bits that all addresses in it share, written <code>192.0.2.0/24</code>.  The address is kept as it was given, so <code>192.0.2.5/24</code> stands for &quot;this host on that link&quot; the way an interface does; every question about the block itself works on <code>masked</code>, which is the same prefix with the host bits cleared.</p>
 <pre class="type-body">  net : Addr
   plen : Int32</pre>
+<p class="item-doc"><span class="label">also</span> @debug.Debug, Compare, Eq, Hash, Show</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::addr(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::addr(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Addr</i></pre>
 <p class="item-doc">The address as written, host bits and all.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::bits(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::bits(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 <p class="item-doc">The length of the mask in bits: 0 to 32 for IPv4, 0 to 128 for IPv6.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::broadcast(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Addr</span>?</pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::broadcast(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Addr</i>?</pre>
 <p class="item-doc">The last address of the block, or <code>None</code> for IPv6, which has no broadcast address: the top of an IPv6 block is an ordinary unicast address.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::compare(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::compare(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::contains(<span class="ty">Self</span>, <span class="ty">Addr</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::contains(<i class="ty">Self</i>, <i class="ty">Addr</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether the address falls inside the block. An IPv4-mapped IPv6 address is matched against IPv6 blocks only; <code>unmap</code> first if you mean the IPv4 one.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::exclude(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Array</span>[<span class="ty">Self</span>] raise <span class="ty">Refused</span></pre>
-<p class="item-doc">The parts of this block that the other one does not cover, largest first.  The other block only has to share the family; a block that merely touches this one at the edge leaves it whole, one that covers it leaves nothing, and one that sits over part of it leaves the surround. So the answer is always the exact difference, whatever the caller passes.  ``<code>mbt check test { let parts = @moonip.Prefix::parse(&quot;192.0.2.0/28&quot;).exclude( @moonip.Prefix::parse(&quot;192.0.2.1/32&quot;), ) assert_eq(parts.length(), 4) assert_eq(parts[0].to_string(), &quot;192.0.2.8/29&quot;) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::exclude(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Array</i>[<i class="ty">Self</i>] raise <i class="ty">Refused</i></pre>
+<p class="item-doc">The parts of this block that the other one does not cover, largest first.  The other block only has to share the family; a block that merely touches this one at the edge leaves it whole, one that covers it leaves nothing, and one that sits over part of it leaves the surround. So the answer is always the exact difference, whatever the caller passes.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::hash(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::hash(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::hash_combine(<span class="ty">Self</span>, <span class="ty">Hasher</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::hash_combine(<i class="ty">Self</i>, <i class="ty">Hasher</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::hostmask(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::hostmask(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Addr</i></pre>
 <p class="item-doc">The complement of the mask, <code>0.0.0.255</code> or <code>::ffff:ffff:ffff:ffff</code>.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::hosts(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Iter</span>[<span class="ty">Addr</span>]</pre>
-<p class="item-doc">The addresses that can be given to an interface in the block.  For IPv4 that is every address except the network and broadcast ones, with a <code>/31</code> (RFC 3021) and a <code>/32</code> kept whole because both ends are usable there. For IPv6 it is every address except the subnet-router anycast address at the bottom, with a <code>/127</code> and a <code>/128</code> kept whole.  The iterator is lazy; a <code>/0</code> has a great many addresses and no one wants them in an array.  ``<code>mbt check test { let usable = @moonip.Prefix::parse(&quot;192.0.2.0/30&quot;).hosts().collect() assert_eq(usable.length(), 2) assert_eq(usable[0].to_string(), &quot;192.0.2.1&quot;) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::hosts(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Iter</i>[<i class="ty">Addr</i>]</pre>
+<p class="item-doc">The addresses that can be given to an interface in the block.  For IPv4 that is every address except the network and broadcast ones, with a <code>/31</code> (RFC 3021) and a <code>/32</code> kept whole because both ends are usable there. For IPv6 it is every address except the subnet-router anycast address at the bottom, with a <code>/127</code> and a <code>/128</code> kept whole.  The iterator is lazy; a <code>/0</code> has a great many addresses and no one wants them in an array.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::is_subnet_of(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::is_subnet_of(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this block sits inside the other one, equal blocks included.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::masked(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Self</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::masked(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
 <p class="item-doc">The block itself: the address with every bit below the mask cleared.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::netmask(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::netmask(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Addr</i></pre>
 <p class="item-doc">The mask as an address, <code>255.255.255.0</code> or <code>ffff:ffff:ffff:ffff::</code>.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::new(<span class="ty">Addr</span>, <span class="ty">Int32</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::new(<i class="ty">Addr</i>, <i class="ty">Int32</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
 <p class="item-doc">A prefix from an address and a length. The address is kept whole; use <code>masked</code> to turn it into the network it names.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::not_equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::not_equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::op_ge(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::op_ge(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::op_gt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::op_gt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::op_le(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::op_le(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::op_lt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::op_lt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::output(<span class="ty">Self</span>, &amp;<span class="ty">Logger</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::output(<i class="ty">Self</i>, &amp;<i class="ty">Logger</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::overlaps(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::overlaps(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether two blocks share at least one address. Blocks of different families never do.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::parse(<span class="ty">StringView</span>, strict? : <span class="ty">Bool</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
-<p class="item-doc">Read a prefix from <code>address/length</code>.  With <code>strict</code> on, bits set below the mask are refused; with it off they are cleared, which is how a block is usually written by hand.  ``<code>mbt check test { let subnet = @moonip.Prefix::parse(&quot;192.0.2.0/24&quot;) assert_eq(subnet.to_string(), &quot;192.0.2.0/24&quot;) assert_eq( @moonip.Prefix::parse(&quot;192.0.2.5/24&quot;, strict=false).to_string(), &quot;192.0.2.0/24&quot;, ) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::parse(<i class="ty">StringView</i>, strict? : <i class="ty">Bool</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
+<p class="item-doc">Read a prefix from <code>address/length</code>.  With <code>strict</code> on, bits set below the mask are refused; with it off they are cleared, which is how a block is usually written by hand.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::subnets(<span class="ty">Self</span>, bits~ : <span class="ty">Int32</span>) <span class="op">-&gt;</span> <span class="ty">Iter</span>[<span class="ty">Self</span>] raise <span class="ty">Refused</span></pre>
-<p class="item-doc">The blocks of length <code>bits</code> that together make up this one, in ascending order.  ``<code>mbt check test { let halves = @moonip.Prefix::parse(&quot;10.0.0.0/8&quot;).subnets(bits=9).collect() assert_eq(halves.length(), 2) assert_eq(halves[1].to_string(), &quot;10.128.0.0/9&quot;) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::subnets(<i class="ty">Self</i>, bits~ : <i class="ty">Int32</i>) <i class="op">-&gt;</i> <i class="ty">Iter</i>[<i class="ty">Self</i>] raise <i class="ty">Refused</i></pre>
+<p class="item-doc">The blocks of length <code>bits</code> that together make up this one, in ascending order.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::supernet(<span class="ty">Self</span>, bits~ : <span class="ty">Int32</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
-<p class="item-doc">The block of length <code>bits</code> that contains this one.  ``<code>mbt check test { assert_eq( @moonip.Prefix::parse(&quot;192.0.2.0/24&quot;).supernet(bits=16).to_string(), &quot;192.0.0.0/16&quot;, ) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::supernet(<i class="ty">Self</i>, bits~ : <i class="ty">Int32</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
+<p class="item-doc">The block of length <code>bits</code> that contains this one.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::to_repr(<span class="ty">Self</span>) <span class="op">-&gt;</span> @debug.<span class="ty">Repr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::to_repr(<i class="ty">Self</i>) <i class="op">-&gt;</i> @debug.<i class="ty">Repr</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Prefix</span>::to_string(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::to_string(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
 </div>
-</section>
-<section class="group" id="addrport">
-<div class="group-head"><h2>Address and port</h2><span class="no">AddrPort</span></div>
+</div>
+<div class="ref-group" id="addrport">
+<div class="ref-head"><span class="no">03</span><h2>Address and port</h2><span class="of">AddrPort · 17 entries</span></div>
 <p class="group-desc">One end of a conversation.</p>
-<div class="item" data-k="type">
+<div class="item">
 <pre class="sig">pub struct AddrPort</pre>
-<p class="item-doc">An address and a port: one end of a TCP or UDP conversation.  ``<code>mbt check test { let end = @moonip.AddrPort::parse(&quot;[::1]:443&quot;) assert_eq(end.to_string(), &quot;[::1]:443&quot;) assert_eq(end.port(), 443) } </code>``</p>
+<p class="item-doc">An address and a port: one end of a TCP or UDP conversation.</p>
 <pre class="type-body">  addr : Addr
   port : Int32</pre>
+<p class="item-doc"><span class="label">also</span> @debug.Debug, Compare, Eq, Hash, Show</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::addr(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::addr(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Addr</i></pre>
 <p class="item-doc">The address half.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::compare(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::compare(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::hash(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::hash(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::hash_combine(<span class="ty">Self</span>, <span class="ty">Hasher</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::hash_combine(<i class="ty">Self</i>, <i class="ty">Hasher</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::new(<span class="ty">Addr</span>, <span class="ty">Int32</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::new(<i class="ty">Addr</i>, <i class="ty">Int32</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
 <p class="item-doc">An address and a port, the port being 0 to 65535.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::not_equal(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::not_equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::op_ge(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::op_ge(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::op_gt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::op_gt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::op_le(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::op_le(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::op_lt(<span class="ty">Self</span>, <span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Bool</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::op_lt(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::output(<span class="ty">Self</span>, &amp;<span class="ty">Logger</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::output(<i class="ty">Self</i>, &amp;<i class="ty">Logger</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::parse(<span class="ty">StringView</span>) <span class="op">-&gt;</span> <span class="ty">Self</span> raise <span class="ty">Refused</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::parse(<i class="ty">StringView</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
 <p class="item-doc">Read <code>1.2.3.4:80</code> or <code>[::1]:80</code>.  The brackets around an IPv6 address are what tells the last colon from the ones in the address, so an IPv6 address without them is refused rather than guessed at.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::port(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">Int32</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::port(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Int32</i></pre>
 <p class="item-doc">The port half, 0 to 65535.</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::to_repr(<span class="ty">Self</span>) <span class="op">-&gt;</span> @debug.<span class="ty">Repr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::to_repr(<i class="ty">Self</i>) <i class="op">-&gt;</i> @debug.<i class="ty">Repr</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">AddrPort</span>::to_string(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::to_string(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
 </div>
-</section>
-<section class="group" id="refused">
-<div class="group-head"><h2>Refusal</h2><span class="no">Refused</span></div>
+</div>
+<div class="ref-group" id="refused">
+<div class="ref-head"><span class="no">04</span><h2>Refusal</h2><span class="of">Refused · 3 entries</span></div>
 <p class="group-desc">Why a text form, a byte string or an argument pair was refused.</p>
-<div class="item" data-k="type">
+<div class="item">
 <pre class="sig">pub struct Refused</pre>
 <p class="item-doc">Why a text form, a byte string or an argument pair was refused.  Every call that can refuse reports one of these rather than a boolean, so the caller can tell a typo from a number that was merely too large.</p>
 <pre class="type-body">  Malformed(at~ : Int32)
@@ -383,53 +391,54 @@
   HostBits
   Family
   Reversed</pre>
+<p class="item-doc"><span class="label">also</span> Show</p>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Refused</span>::output(<span class="ty">Self</span>, &amp;<span class="ty">Logger</span>) <span class="op">-&gt;</span> <span class="ty">Unit</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Refused</i>::output(<i class="ty">Self</i>, &amp;<i class="ty">Logger</i>) <i class="op">-&gt;</i> <i class="ty">Unit</i></pre>
 </div>
-<div class="item" data-k="trait">
-<pre class="sig">pub <span class="k">fn</span> <span class="ty">Refused</span>::to_string(<span class="ty">Self</span>) <span class="op">-&gt;</span> <span class="ty">String</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Refused</i>::to_string(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
 </div>
-</section>
-<section class="group" id="free">
-<div class="group-head"><h2>Free functions</h2><span class="no">2</span></div>
+</div>
+<div class="ref-group" id="free">
+<div class="ref-head"><span class="no">05</span><h2>Free functions</h2><span class="of">6 entries</span></div>
 <p class="group-desc">Block arithmetic that belongs to no one type: a range joined back up, and a set of blocks collapsed.</p>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> collapse(<span class="ty">ArrayView</span>[<span class="ty">Prefix</span>]) <span class="op">-&gt;</span> <span class="ty">Array</span>[<span class="ty">Prefix</span>]</pre>
-<p class="item-doc">The fewest blocks that hold exactly the same addresses as the ones given.  Blocks of different families are collapsed separately and the IPv4 ones come first, so the answer is always exact even though a mix of families has no single ordering.  ``<code>mbt check test { let halves = [ @moonip.Prefix::parse(&quot;192.0.2.0/25&quot;), @moonip.Prefix::parse(&quot;192.0.2.128/25&quot;), ] let whole = @moonip.collapse(halves) assert_eq(whole.length(), 1) assert_eq(whole[0].to_string(), &quot;192.0.2.0/24&quot;) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> collapse(<i class="ty">ArrayView</i>[<i class="ty">Prefix</i>]) <i class="op">-&gt;</i> <i class="ty">Array</i>[<i class="ty">Prefix</i>]</pre>
+<p class="item-doc">The fewest blocks that hold exactly the same addresses as the ones given.  Blocks of different families are collapsed separately and the IPv4 ones come first, so the answer is always exact even though a mix of families has no single ordering.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">let</span> loopback4 : <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">let</i> loopback4 : <i class="ty">Addr</i></pre>
 <p class="item-doc">127.0.0.1, the near end of the loopback range.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">let</span> loopback6 : <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">let</i> loopback6 : <i class="ty">Addr</i></pre>
 <p class="item-doc">::1, the only loopback address IPv6 has.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">fn</span> summarize(<span class="ty">Addr</span>, <span class="ty">Addr</span>) <span class="op">-&gt;</span> <span class="ty">Array</span>[<span class="ty">Prefix</span>] raise <span class="ty">Refused</span></pre>
-<p class="item-doc">The fewest blocks that hold exactly the addresses from <code>first</code> to <code>last</code>.  ``<code>mbt check test { let blocks = @moonip.summarize( @moonip.Addr::parse(&quot;192.0.2.0&quot;), @moonip.Addr::parse(&quot;192.0.2.130&quot;), ) assert_eq(blocks.length(), 3) assert_eq(blocks[0].to_string(), &quot;192.0.2.0/25&quot;) } </code>``</p>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> summarize(<i class="ty">Addr</i>, <i class="ty">Addr</i>) <i class="op">-&gt;</i> <i class="ty">Array</i>[<i class="ty">Prefix</i>] raise <i class="ty">Refused</i></pre>
+<p class="item-doc">The fewest blocks that hold exactly the addresses from <code>first</code> to <code>last</code>.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">let</span> unspecified4 : <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">let</i> unspecified4 : <i class="ty">Addr</i></pre>
 <p class="item-doc">0.0.0.0, the address that means &quot;this host, no address yet&quot;.</p>
 </div>
-<div class="item" data-k="fn">
-<pre class="sig">pub <span class="k">let</span> unspecified6 : <span class="ty">Addr</span></pre>
+<div class="item">
+<pre class="sig">pub <i class="k">let</i> unspecified6 : <i class="ty">Addr</i></pre>
 <p class="item-doc">::, the same idea in IPv6.</p>
 </div>
-</section>
+</div>
 <p class="empty hidden" id="empty">Nothing here matches that.</p>
-</div></div></main><footer class="foot">
-  <div class="page">
-    <div class="foot-grid">
+</div></section></main><footer class="foot">
+  <div class="frame">
+    <div class="foot-in">
       <div class="about">
-        <a class="brand" href="./"><span class="mark"><i></i><i></i><i class="on"></i><i></i><i></i><i class="on6"></i><i></i><i></i></span><span class="full">moonip</span></a>
-        <p>IP addresses and networks for MoonBit: parsing, formatting and classification, on every target the
-        compiler builds for.</p>
+        <a class="brand" href="./" style="border:0;padding:0"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting, block arithmetic and
+        classification, on every target the compiler builds for.</p>
       </div>
       <div>
-        <h4>Pages</h4>
+        <h4>pages</h4>
         <ul>
           <li><a href="./guide.html">Guide</a></li>
           <li><a href="./api.html">API reference</a></li>
@@ -437,7 +446,7 @@
         </ul>
       </div>
       <div>
-        <h4>Elsewhere</h4>
+        <h4>elsewhere</h4>
         <ul>
           <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
           <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
@@ -445,11 +454,11 @@
         </ul>
       </div>
     </div>
-    <div class="meta">
-      <svg class="tick-meta" width="56" height="6" viewBox="0 0 56 6" aria-hidden="true"><path class="a" d="M0 3h22"/><path class="b" d="M28 3h14"/><path class="c" d="M48 3h8"/></svg>
-      <span>Apache-2.0</span>
+    <div class="trailer">
+      <span class="eof">eof</span>
+      <span>checksum 0x<span id="foot-chk">0000</span></span>
       <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
-      <span>IANA special-purpose registries, 2026-10-31</span>
+      <span>IANA registries, 2026-10-31</span>
     </div>
   </div>
 </footer>
