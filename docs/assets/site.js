@@ -55,6 +55,10 @@ function countHops() {
     if (section.getBoundingClientRect().bottom + window.scrollY < mark) passed += 1;
   }
   ttl.textContent = String(Math.max(0, sections.length - passed)).padStart(2, "0");
+  // The fragment offset counts eight-byte units from the start of the datagram,
+  // which is exactly how far down this page the reader has got.
+  const off = document.getElementById("hdr-off");
+  if (off) off.textContent = hex4(Math.floor(window.scrollY / 8) & 0x1fff);
 }
 
 /* ---------- bit cells ---------- */
@@ -303,6 +307,32 @@ if (filterBox) {
   };
   filterBox.addEventListener("input", apply);
   apply();
+}
+
+/* ---------- the header map ---------- */
+
+const headerMap = document.getElementById("hmap");
+if (headerMap) {
+  const out = document.getElementById("hmap-out");
+  const rest = out.innerHTML;
+  const show = (field) => {
+    out.innerHTML = "";
+    const name = document.createElement("b");
+    name.textContent = field.dataset.what || "";
+    const why = document.createElement("span");
+    why.className = "api";
+    why.textContent = field.dataset.why || "";
+    out.append(name, why);
+  };
+  const reset = () => {
+    out.innerHTML = rest;
+  };
+  for (const field of headerMap.querySelectorAll(".hmap-f")) {
+    field.addEventListener("mouseenter", () => show(field));
+    field.addEventListener("focus", () => show(field));
+    field.addEventListener("mouseleave", reset);
+    field.addEventListener("blur", reset);
+  }
 }
 
 /* ---------- start ---------- */
