@@ -44,11 +44,10 @@ form of RFC 5952.
 
 ```moonbit
 let a = @moonip.Addr::parse("2001:0DB8:0000:0000:0000:0000:0000:0001")
-a.to_string()          // 2001:db8::1
-a.exploded()           // 2001:0db8:0000:0000:0000:0000:0000:0001
-a.encode().length()    // 16
-
-@moonip.Addr::parse("::ffff:192.0.2.1").unmap().to_string()   // 192.0.2.1
+assert_eq(a.to_string(), "2001:db8::1")
+assert_eq(a.exploded(), "2001:0db8:0000:0000:0000:0000:0000:0001")
+assert_eq(a.encode().length(), 16)
+assert_eq(@moonip.Addr::parse("::ffff:192.0.2.1").unmap().to_string(), "192.0.2.1")
 ```
 
 `next` and `prev` step through a family and stop at its ends. `reverse_pointer`
@@ -59,10 +58,11 @@ addresses back out of the two transition forms.
 
 ```moonbit
 let block = @moonip.Prefix::parse("192.0.2.0/24")
-block.masked()        // 192.0.2.0/24
-block.netmask()       // 255.255.255.0
-block.hostmask()      // 0.0.0.255
-block.broadcast()     // Some(192.0.2.255)   IPv6 has none: None
+assert_eq(block.masked().to_string(), "192.0.2.0/24")
+assert_eq(block.netmask().to_string(), "255.255.255.0")
+assert_eq(block.hostmask().to_string(), "0.0.0.255")
+assert_eq(block.broadcast().map(@moonip.Addr::to_string), Some("192.0.2.255"))
+assert_eq(@moonip.Prefix::parse("2001:db8::/32").broadcast(), None) // IPv6 has none
 ```
 
 A prefix keeps the address it was written with, so the same value can stand for
@@ -83,7 +83,9 @@ let parts = @moonip.summarize(
   @moonip.Addr::parse("192.0.2.0"),
   @moonip.Addr::parse("192.0.2.130"),
 )
-// 192.0.2.0/25 · 192.0.2.128/31 · 192.0.2.130/32
+assert_eq(parts.map(@moonip.Prefix::to_string), [
+  "192.0.2.0/25", "192.0.2.128/31", "192.0.2.130/32",
+])
 ```
 
 ## Classification

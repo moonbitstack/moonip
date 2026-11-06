@@ -43,9 +43,9 @@ when a wire format wants the bytes — four for IPv4, sixteen for IPv6.
 
 ```moonbit
 let block = @moonip.Prefix::parse("10.20.0.0/16")
-let inside = block.contains(@moonip.Addr::parse("10.20.3.4"))   // true
-let network = block.masked()                                   // 10.20.0.0/16
-let first_host = block.hosts().next().unwrap()                 // 10.20.0.1
+assert_true(block.contains(@moonip.Addr::parse("10.20.3.4")))
+assert_eq(block.masked().to_string(), "10.20.0.0/16")
+assert_eq(block.hosts().next().unwrap().to_string(), "10.20.0.1")
 ```
 
 A `Prefix` keeps the address it was written with, so `192.0.2.5/24` is an
@@ -62,9 +62,9 @@ Eight predicates, taken from the IANA special-purpose registries:
 
 ```moonbit
 let addr = @moonip.Addr::parse("100.64.0.1")
-addr.is_private()      // false: shared address space is not private-use
-addr.is_global()       // false: it is not reachable either
-addr.is_multicast()    // false
+assert_false(addr.is_private()) // shared address space is not private-use
+assert_false(addr.is_global()) // and it is not reachable either
+assert_false(addr.is_multicast())
 ```
 
 `is_private` means "a registry marks this as not globally reachable", which is
