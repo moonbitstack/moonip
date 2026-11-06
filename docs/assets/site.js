@@ -337,9 +337,11 @@ if (headerMap) {
 
 /* ---------- back to the top ---------- */
 
-const topLink = document.getElementById("totop");
-if (topLink) {
-  const mark = () => topLink.classList.toggle("on", window.scrollY > 300);
+const topLinks = Array.from(document.querySelectorAll(".totop"));
+if (topLinks.length) {
+  const mark = () => {
+    for (const link of topLinks) link.classList.toggle("on", window.scrollY > 300);
+  };
   addEventListener("scroll", mark, { passive: true });
   mark();
 }

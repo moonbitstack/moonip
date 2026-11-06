@@ -1699,79 +1699,117 @@ footer ul a:hover {
   }
 }
 
-/* ---------- back to the top ----------
-   The control is a field in the margin, not a floating pill: a square with a
-   chevron and the word under it. On a wide screen it lives in the empty gutter to
-   the left of the frame, halfway down; where there is no gutter it takes the
-   bottom-right corner. It appears when the page leaves the top, which is also when
-   the scrollbar appears, so the two arrive together. */
+/* ---------- back to the top, from either side ----------
+   Two thin tabs in the margins, halfway down, the way a drawing marks a field at
+   its edge. The word is set vertically and the pair mirrors across the frame: on
+   the right it runs downward with the tops of the letters facing right, on the
+   left it runs upward with the tops facing left. Each tab carries a chevron above
+   the word, pointing the way it takes you.
+
+   Where the margins are narrower than a tab there is no room for the pair: the
+   left tab goes and the right one folds into the corner square, which is also
+   what a phone gets. */
 
 .totop {
-  --tx: 8px;
-  --ty: 0px;
   position: fixed;
   z-index: 40;
-  right: 16px;
-  bottom: 16px;
-  width: 44px;
-  height: 44px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 32px;
+  height: 152px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 12px;
   border: 1px solid var(--rule);
   background: var(--field);
-  color: var(--ink);
+  color: var(--ink-2);
   text-decoration: none;
-  font-family: var(--mono);
-  font-size: 8.5px;
-  line-height: 1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   opacity: 0;
-  transform: translate(var(--tx), var(--ty));
   pointer-events: none;
-  transition: opacity 160ms ease, transform 160ms ease, background 120ms ease,
-    color 120ms ease;
+  transition: opacity 160ms ease, background 120ms ease, color 120ms ease,
+    border-color 120ms ease;
+}
+
+/* Half the frame's width plus forty-eight pixels: the frame border, on either
+   side, less the fourteen-pixel gap the tab keeps from it. */
+.totop.left {
+  left: calc(50% - 688px);
+}
+
+.totop.right {
+  right: calc(50% - 688px);
 }
 
 .totop svg {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   display: block;
+  flex: none;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.4;
 }
 
 .totop span {
-  font-size: 8px;
+  writing-mode: vertical-rl;
+  font-family: var(--mono);
+  font-size: 9px;
+  line-height: 1;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* On the left the letters keep their tops to the left, so the word reads upward:
+   the same strip, turned over. */
+.totop.left span {
+  rotate: 180deg;
 }
 
 .totop.on {
   opacity: 1;
-  --tx: 0px;
   pointer-events: auto;
 }
 
 .totop:hover,
 .totop:focus-visible {
   background: var(--ink);
+  border-color: var(--ink);
   color: var(--field);
   outline: 0;
 }
 
-@media (width >= 1440px) {
+@media (width < 1440px) {
   .totop {
-    --tx: -8px;
-    --ty: -50%;
-    right: auto;
-    bottom: auto;
-    top: 50%;
-    left: calc((100vw - 1280px) / 2 - 58px);
-    width: 40px;
-    height: 46px;
+    top: auto;
+    bottom: 16px;
+    translate: none;
+    width: 44px;
+    height: 44px;
+    gap: 2px;
+    color: var(--ink);
+  }
+
+  .totop.left {
+    display: none;
+  }
+
+  .totop.right {
+    right: 16px;
+  }
+
+  .totop span {
+    writing-mode: horizontal-tb;
+    rotate: none;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+  }
+
+  .totop svg {
+    width: 14px;
+    height: 14px;
   }
 }
 
