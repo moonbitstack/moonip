@@ -27,8 +27,12 @@
   color-scheme: light dark;
 }
 
+/* The same dark palette twice, because a media query and an attribute cannot share
+   a block: the first copy answers the system, the second answers the switch on the
+   explorer, which writes data-theme on the root and outranks the system either way.
+   Change one and change the other. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --ground: #070809;
     --field: #0e1113;
     --panel: #151a1c;
@@ -42,7 +46,29 @@
     --v4-soft: color-mix(in srgb, #f0863a 16%, var(--field));
     --v6: #3fc7b8;
     --v6-soft: color-mix(in srgb, #3fc7b8 16%, var(--field));
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --ground: #070809;
+  --field: #0e1113;
+  --panel: #151a1c;
+  --panel-ink: #e2ddce;
+  --ink: #e7e2d4;
+  --ink-2: #9aa09c;
+  --rule: color-mix(in srgb, var(--ink) 72%, transparent);
+  --rule-soft: color-mix(in srgb, var(--ink) 15%, transparent);
+  --rule-mid: color-mix(in srgb, var(--ink) 34%, transparent);
+  --v4: #f0863a;
+  --v4-soft: color-mix(in srgb, #f0863a 16%, var(--field));
+  --v6: #3fc7b8;
+  --v6-soft: color-mix(in srgb, #3fc7b8 16%, var(--field));
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 
 *,
@@ -284,14 +310,31 @@ nav.nav svg {
   display: block;
 }
 
-@media (width <= 560px) {
+@media (width <= 620px) {
   nav.nav a {
-    padding: 0 9px;
+    padding: 0 7px;
     font-size: 11.5px;
   }
 
   nav.nav a.gh {
     display: none;
+  }
+
+  /* The switch leaves the strip on a phone and takes the far corner, facing the
+     top control across the bottom of the page. The navigation keeps its four
+     words instead. */
+  .themesw {
+    position: fixed;
+    left: 14px;
+    bottom: 16px;
+    z-index: 40;
+    height: 44px;
+    border: 1px solid var(--rule);
+    background: var(--field);
+  }
+
+  .themesw button {
+    padding: 0 9px;
   }
 }
 
@@ -1411,21 +1454,31 @@ footer ul a:hover {
 
 /* ---------- a caption under a diagram ---------- */
 
+/* A hanging indent rather than two columns: the label is inline, so a caption can
+   hold code or emphasis without every run of text becoming its own grid cell. */
 .figcap {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: 12px;
+  display: block;
+  padding-left: 4.9em;
+  text-indent: -4.9em;
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.02em;
   line-height: 1.55;
   color: var(--ink-2);
   margin-top: 8px;
-  max-width: 78ch;
+  max-width: 82ch;
 }
 
 .figcap b {
+  display: inline-block;
+  width: 4.9em;
+  text-indent: 0;
   white-space: nowrap;
+}
+
+.figcap i {
+  font-style: italic;
+  color: var(--ink);
 }
 
 .figcap b {
@@ -1628,5 +1681,694 @@ footer ul a:hover {
 
   .payload::before {
     left: 14px;
+  }
+}
+
+/* ---------- back to the top ----------
+   The control is a field in the margin, not a floating pill: a square with a
+   chevron and the word under it. On a wide screen it lives in the empty gutter to
+   the left of the frame, halfway down; where there is no gutter it takes the
+   bottom-right corner. It appears when the page leaves the top, which is also when
+   the scrollbar appears, so the two arrive together. */
+
+.totop {
+  --tx: 8px;
+  --ty: 0px;
+  position: fixed;
+  z-index: 40;
+  right: 16px;
+  bottom: 16px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border: 1px solid var(--rule);
+  background: var(--field);
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--mono);
+  font-size: 8.5px;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translate(var(--tx), var(--ty));
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease, background 120ms ease,
+    color 120ms ease;
+}
+
+.totop svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.totop span {
+  font-size: 8px;
+}
+
+.totop.on {
+  opacity: 1;
+  --tx: 0px;
+  pointer-events: auto;
+}
+
+.totop:hover,
+.totop:focus-visible {
+  background: var(--ink);
+  color: var(--field);
+  outline: 0;
+}
+
+@media (width >= 1440px) {
+  .totop {
+    --tx: -8px;
+    --ty: -50%;
+    right: auto;
+    bottom: auto;
+    top: 50%;
+    left: calc((100vw - 1280px) / 2 - 58px);
+    width: 40px;
+    height: 46px;
+  }
+}
+
+@media print {
+  .totop {
+    display: none;
+  }
+}
+
+/* ---------- the day / night switch ----------
+   Two positions, in the same cells the navigation uses, so it reads as another
+   field of the strip rather than a control bolted to it. */
+
+.themesw {
+  display: flex;
+  align-items: stretch;
+  border-left: 1px solid var(--rule-soft);
+}
+
+.themesw button {
+  display: flex;
+  align-items: center;
+  border: 0;
+  border-right: 1px solid var(--rule-soft);
+  background: none;
+  padding: 0 9px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.themesw button:hover {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.themesw button[aria-pressed="true"] {
+  color: var(--field);
+  background: var(--ink);
+}
+
+.themesw button:focus-visible {
+  outline: 1px solid var(--v4);
+  outline-offset: -3px;
+}
+
+@media (width <= 560px) {
+  .themesw button {
+    padding: 0 7px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+  }
+}
+
+/* ---------- showcase: two instruments ---------- */
+
+.exhibit {
+  border: 1px solid var(--rule);
+  background: var(--field);
+}
+
+.exhibit-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 14px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--ink-2);
+}
+
+.exhibit-head b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.exhibit-head .r {
+  margin-left: auto;
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ---------- fragmentation ---------- */
+
+.frag-scroll {
+  position: relative;
+  height: 185vh;
+  margin-top: 18px;
+}
+
+.frag-pin {
+  position: sticky;
+  top: var(--hdr);
+  min-height: calc(100vh - var(--hdr));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.frag-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 236px;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  padding: 16px 14px 18px;
+}
+
+.frag-stage {
+  --qgap: 40px;
+  --bar-y: 262px;
+  position: relative;
+  height: 384px;
+  width: calc(47 * 1ch);
+  max-width: 100%;
+  font-family: var(--mono);
+  font-size: clamp(12px, 1.9vw, 21px);
+}
+
+/* The queue is where fragments wait on the wire, one row each. */
+.frag-queue {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: var(--bar-y);
+  border-left: 1px dashed var(--rule-mid);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 calc(var(--qgap) - 1px),
+    var(--rule-soft) calc(var(--qgap) - 1px) var(--qgap)
+  );
+  background-position: 0 0;
+}
+
+.frag-empty {
+  position: absolute;
+  top: 46%;
+  left: 1.2ch;
+  margin: 0;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.frag-empty.on {
+  opacity: 1;
+}
+
+.frag-queue::before {
+  content: "wire";
+  position: absolute;
+  top: -16px;
+  left: -1px;
+  padding-right: 6px;
+  background: var(--field);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.frag-card {
+  position: absolute;
+  top: calc(var(--k) * var(--qgap));
+  left: 0;
+  width: calc(var(--len) / 47 * 100%);
+  height: calc(var(--qgap) - 6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1px solid var(--rule-mid);
+  background: var(--ground);
+  font-size: 9.5px;
+  line-height: 1;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  z-index: 2;
+  transition: left 560ms cubic-bezier(0.2, 0.75, 0.2, 1),
+    top 560ms cubic-bezier(0.2, 0.75, 0.2, 1), background 240ms ease,
+    border-color 240ms ease, color 240ms ease;
+}
+
+.frag-stage.booting .frag-card {
+  transition: none;
+}
+
+.frag-card b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.frag-card i {
+  font-style: normal;
+  font-size: 8.5px;
+  letter-spacing: 0.02em;
+  opacity: 0.8;
+}
+
+.frag-card.in {
+  top: var(--bar-y);
+  left: calc(var(--off) / 47 * 100%);
+  border-color: var(--v4);
+  background: var(--v4-soft);
+  color: var(--v4);
+}
+
+.frag-card.in b {
+  color: var(--v4);
+}
+
+/* The buffer: one cell per byte, hatched until a fragment covers its span. */
+.frag-bar {
+  position: absolute;
+  top: var(--bar-y);
+  left: 0;
+  width: 100%;
+  height: calc(var(--qgap) - 6px);
+  display: grid;
+  grid-template-columns: repeat(47, minmax(0, 1fr));
+  border: 1px solid var(--rule-mid);
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 5px,
+    color-mix(in srgb, var(--ink) 8%, transparent) 5px 6px
+  );
+}
+
+.frag-bar i {
+  display: block;
+  border-right: 1px solid var(--rule-soft);
+}
+
+.frag-bar i:nth-child(8n) {
+  border-right-color: var(--rule-mid);
+}
+
+.frag-bar i:last-child {
+  border-right: 0;
+}
+
+.frag-axis {
+  position: absolute;
+  top: calc(var(--bar-y) + var(--qgap) + 2px);
+  left: 0;
+  width: 100%;
+  height: 14px;
+  font-size: 8.5px;
+  color: var(--ink-2);
+}
+
+.frag-axis span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  letter-spacing: 0.02em;
+}
+
+.frag-axis span:first-child {
+  transform: none;
+}
+
+.frag-axis::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  border-left: 1px solid var(--rule-mid);
+  border-right: 1px solid var(--rule-mid);
+  border-top: 1px solid var(--rule-soft);
+}
+
+/* The payload line: the bytes themselves, one span each, so a gap is a gap. */
+.frag-text {
+  position: absolute;
+  top: calc(var(--bar-y) + var(--qgap) + 26px);
+  left: 0;
+  font-size: 1em;
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--ink);
+}
+
+.frag-text i {
+  font-style: normal;
+  color: transparent;
+  background: color-mix(in srgb, var(--ink) 7%, transparent);
+  transition: color 220ms ease, background 220ms ease;
+}
+
+.frag-text i.got {
+  color: var(--ink);
+  background: transparent;
+}
+
+.frag-text i.space.got {
+  background: transparent;
+}
+
+.frag-side {
+  align-self: center;
+  min-width: 0;
+}
+
+.frag-stat {
+  margin: 0 0 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: var(--ink-2);
+}
+
+.frag-stat b {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.frag-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 9.5px;
+}
+
+.frag-list li {
+  display: grid;
+  grid-template-columns: 1.8em 1fr auto auto;
+  gap: 6px;
+  align-items: baseline;
+  padding: 5px 2px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--ink-2);
+  transition: color 200ms ease, background 200ms ease;
+}
+
+.frag-list li b {
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.frag-list li.in {
+  color: var(--v4);
+  background: color-mix(in srgb, var(--v4) 7%, transparent);
+}
+
+.frag-list li.in b {
+  color: var(--v4);
+}
+
+.frag-list .hex {
+  grid-column: 1 / -1;
+  font-size: 8.5px;
+  letter-spacing: 0.03em;
+  color: var(--ink-2);
+  opacity: 0.75;
+}
+
+.frag-list li.in .hex {
+  opacity: 1;
+}
+
+@media (width <= 900px) {
+  .frag-inner {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .frag-stage {
+    --qgap: 30px;
+    --bar-y: 200px;
+    height: 300px;
+    width: 100%;
+    font-size: clamp(10px, 2.9vw, 14px);
+  }
+
+  .frag-bar,
+  .frag-axis {
+    width: 100%;
+    grid-template-columns: repeat(47, minmax(0, 1fr));
+  }
+
+  .frag-bar i:nth-child(8n) {
+    border-right-color: var(--rule-soft);
+  }
+
+  .frag-card {
+    font-size: 8px;
+  }
+
+  .frag-card i {
+    display: none;
+  }
+
+  .frag-scroll {
+    height: 150vh;
+  }
+}
+
+/* ---------- the hop ladder ---------- */
+
+.trace-form {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 10px;
+  align-items: flex-end;
+  max-width: 620px;
+  margin: 14px 0 0;
+}
+
+.trace-form label {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.trace-form span {
+  display: block;
+  margin-bottom: 3px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.trace-form input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--rule);
+  background: var(--field);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.trace-form input:focus {
+  outline: 0;
+  border-color: var(--v4);
+  box-shadow: inset 0 0 0 1px var(--v4);
+}
+
+.trace-form button {
+  padding: 10px 16px;
+  border: 1px solid var(--rule);
+  background: var(--ink);
+  color: var(--field);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.trace-form button:hover {
+  background: var(--v4);
+  border-color: var(--v4);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 9px;
+}
+
+.chips button {
+  padding: 3px 7px;
+  border: 1px solid var(--rule-soft);
+  background: none;
+  color: var(--ink-2);
+  font-family: var(--mono);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.chips button:hover,
+.chips button:focus-visible {
+  border-color: var(--v4);
+  color: var(--ink);
+  outline: 0;
+}
+
+.ladder {
+  margin-top: 18px;
+  border: 1px solid var(--rule);
+  border-bottom: 0;
+}
+
+.hop {
+  display: grid;
+  grid-template-columns: 2.4em 15em minmax(0, 1fr) 3.4em;
+  gap: 8px;
+  align-items: baseline;
+  padding: 8px 10px 8px 9px;
+  border-bottom: 1px solid var(--rule);
+  border-left: 3px solid transparent;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.4;
+  color: var(--ink-2);
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease;
+}
+
+.hop .n {
+  color: var(--ink-2);
+  font-size: 9.5px;
+}
+
+.hop .gate {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.hop .where {
+  color: var(--ink-2);
+  font-size: 9.5px;
+  overflow-wrap: anywhere;
+}
+
+.hop .res {
+  text-align: right;
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hop.idle {
+  opacity: 0.42;
+}
+
+.hop.pass .res {
+  color: var(--ink-2);
+}
+
+.hop.stop {
+  border-left-color: var(--v4);
+  background: var(--v4-soft);
+  color: var(--ink);
+}
+
+.hop.stop .res {
+  color: var(--v4);
+  font-weight: 500;
+}
+
+.hop.stop .n {
+  color: var(--v4);
+}
+
+.verdict {
+  margin-top: 14px;
+  padding: 12px 14px 13px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--v4);
+  background: var(--field);
+  min-height: 74px;
+}
+
+.verdict .k {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.verdict b {
+  display: block;
+  margin: 4px 0 2px;
+  font-family: var(--display);
+  font-size: clamp(18px, 2.1vw, 25px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.verdict p {
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.verdict.neither b {
+  color: var(--v4);
+}
+
+@media (width <= 700px) {
+  .hop {
+    grid-template-columns: 2.1em minmax(0, 1fr) 3em;
+    font-size: 10px;
+  }
+
+  .hop .gate {
+    grid-column: 2;
+  }
+
+  .hop .where {
+    display: none;
   }
 }

@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Showcase — moonip</title>
+<meta name="description" content="Two instruments: a datagram put back together from fragments by their offsets, and a traceroute of the seven questions that classify an address.">
+<meta name="theme-color" content="#e6e2d6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#070809" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./assets/site.css">
+<script type="module" src="./assets/scrollbar.js"></script>
+<script>try{var t=localStorage.getItem("moonip.theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t;}catch(e){}</script>
+</head>
+<body id="top">
+
+<header class="hdr">
+  <div class="hdr-in">
+    <a class="brand" href="./"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+    <div class="pkt" aria-hidden="true">
+      <div class="c"><i>ver</i><b>4</b></div>
+      <div class="c"><i>ihl</i><b>5</b></div>
+      <div class="c maybe"><i>len</i><b id="hdr-len">0x0000</b></div>
+      <div class="c maybe"><i>id</i><b id="hdr-id">0x0000</b></div>
+      <div class="c maybe"><i>off</i><b id="hdr-off">0x0000</b></div>
+      <div class="c"><i>ttl</i><b id="hdr-ttl">08</b></div>
+      <div class="c maybe"><i>chk</i><b id="hdr-chk">0x0000</b></div>
+    </div>
+    <nav class="nav">
+      <a href="./guide.html">Guide</a>
+      <a href="./api.html">API</a>
+      <a href="./explorer.html">Explorer</a>
+      <a href="./showcase.html" class="on">Showcase</a>
+      <a class="gh" href="https://github.com/moonbitstack/moonip" aria-label="GitHub repository" title="GitHub">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="frame">
+
+  <section class="row">
+    <div class="rail"><span><b>00</b> · showcase</span></div>
+    <div class="field">
+      <p class="kicker">Two instruments · one of them is the library</p>
+      <h1 class="display" style="font-size:clamp(32px,5.4vw,66px)">Two things<br>a packet does.</h1>
+      <p class="lede" style="margin-top:18px">A datagram is cut apart and put back together by the
+      numbers in its header. An address is asked a short series of questions until one of them answers.
+      The first happens in a stack, not in this package; the second is this package's whole job. Both are
+      drawn here with the numbers they actually have.</p>
+    </div>
+  </section>
+
+  <section class="row" id="frag">
+    <div class="rail"><span><b>01</b> · reassembly</span></div>
+    <div class="field">
+      <div class="frag-scroll" aria-label="Fragment reassembly, driven by scrolling">
+        <div class="frag-pin">
+          <p class="kicker">RFC 791 · offset in eights · the more-fragments flag</p>
+          <h2 class="section">One datagram, six fragments,<br>no order.</h2>
+          <p class="lede" style="margin-top:14px;margin-bottom:16px">The wire hands over fragment 4 first,
+          then 1, then 6. Where each one belongs is not in the order it arrives but in its offset field:
+          thirteen bits, counted in eight-byte units from the start of the original. Scroll, and the
+          buffer fills around the holes.</p>
+
+          <div class="exhibit">
+            <div class="exhibit-head">
+              <b>id 0x1a2b</b>
+              <span>47 bytes of payload</span>
+              <span>six fragments</span>
+              <span class="r">scroll to deliver</span>
+            </div>
+            <div class="frag-inner">
+              <div class="frag-stage">
+                <div class="frag-queue" aria-hidden="true"></div>
+                <div class="frag-bar" aria-hidden="true"></div>
+                <div class="frag-axis" aria-hidden="true"></div>
+                <div class="frag-text" aria-hidden="true"></div>
+              </div>
+              <div class="frag-side">
+                <p class="frag-stat">0 / 47 bytes · 0 / 6 fragments</p>
+                <ol class="frag-list" aria-label="Fragments in arrival order"></ol>
+                <noscript>
+                  <p class="hint" style="margin-top:10px">The buffer is drawn with JavaScript. The
+                  arithmetic it shows: six fragments at offsets 0, 8, 16, 24, 32 and 40 bytes — that is
+                  0, 1, 2, 3, 4 and 5 in the eight-byte units the field counts — the first five carrying
+                  8 bytes each with the more-fragments flag set, the last carrying 7 with the flag
+                  clear.</p>
+                </noscript>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="figcap"><b>fig. 1</b> The payload is the sentence the exhibit is about — <i>the offset
+      says where; the length says how much</i> — in ASCII, so a gap in the buffer is a gap in the
+      reading. No library call is made here: fragmentation is a
+      datagram operation and this package never holds a datagram. What is exact is the arithmetic —
+      offsets on eight-byte boundaries, the flag clear on the last fragment only, and the byte counts
+      adding to 47.</p>
+    </div>
+  </section>
+
+  <section class="row" id="hops">
+    <div class="rail"><span><b>02</b> · trace</span></div>
+    <div class="field">
+      <p class="kicker">seven questions · the first yes stops it</p>
+      <h2 class="section">An address,<br>asked seven times.</h2>
+      <p class="lede" style="margin-top:14px">Classification is not one comparison. It is a walk down
+      the rows of two registries — loopback, multicast, link local, private — and the walk ends at the
+      first row that claims the address. A public address climbs all seven rungs before the last one
+      answers; <code>::1</code> stops at the second; and the one block that belongs to neither side
+      reaches the bottom with nothing to show for it.</p>
+
+      <div class="exhibit" style="margin-top:18px">
+        <div class="exhibit-head">
+          <b>classification</b>
+          <span><span id="trace-addr">100.64.0.1</span></span>
+          <span class="r">Addr::is_…</span>
+        </div>
+        <div style="padding:14px">
+          <form class="trace-form" id="trace-form" autocomplete="off">
+            <label for="trace-input"><span>address</span>
+              <input id="trace-input" type="text" value="100.64.0.1" spellcheck="false">
+            </label>
+            <button type="submit">trace</button>
+          </form>
+          <div class="chips">
+            <button type="button" data-address="8.8.8.8">8.8.8.8</button>
+            <button type="button" data-address="10.1.2.3">10.1.2.3</button>
+            <button type="button" data-address="100.64.0.1">100.64.0.1</button>
+            <button type="button" data-address="::1">::1</button>
+            <button type="button" data-address="fe80::1%eth0">fe80::1%eth0</button>
+            <button type="button" data-address="2001:db8::1">2001:db8::1</button>
+          </div>
+
+          <div class="ladder" id="ladder">
+            <div class="hop idle"><span class="n">01</span><span class="gate">is_unspecified()</span><span class="where">0.0.0.0 · ::</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">02</span><span class="gate">is_loopback()</span><span class="where">127.0.0.0/8 · ::1</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">03</span><span class="gate">is_multicast()</span><span class="where">224.0.0.0/4 · ff00::/8</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">04</span><span class="gate">is_link_local()</span><span class="where">169.254.0.0/16 · fe80::/10</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">05</span><span class="gate">is_site_local()</span><span class="where">fec0::/10</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">06</span><span class="gate">is_private()</span><span class="where">the rows the registry marks off</span><span class="res">·</span></div>
+            <div class="hop idle"><span class="n">07</span><span class="gate">is_global()</span><span class="where">what is left</span><span class="res">·</span></div>
+          </div>
+
+          <div class="verdict" id="verdict" aria-live="polite">
+            <span class="k">verdict</span>
+            <b>reading</b>
+            <p>asking the compiler's answers, in order</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="figcap"><b>fig. 2</b> Each rung is one predicate the package exposes, called on the
+      address you typed; the answers are read from the same compiled build that runs the explorer. The
+      order is the order the two IANA registries list their rows, read from the specific to the general —
+      it is a way of showing the walk, not the code path, which compares against prefix tables instead of
+      asking seven times.</p>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="rail"><span><b>03</b> · why these two</span></div>
+    <div class="field">
+      <p class="kicker">exact, both ways</p>
+      <h2 class="section" style="margin-bottom:14px">A question with a checkable answer.</h2>
+      <p>A fragment is 47 bytes of ASCII and a set of offsets; an address is 32 or 128 bits. Neither
+      needs a socket, and neither answer depends on the network being there. That is the whole shape of
+      this package: values in, text out, and a refusal that says where it stopped being possible.</p>
+      <p style="margin-top:14px"><a href="./guide.html">The guide</a> walks the surface in ten steps;
+      <a href="./explorer.html">the explorer</a> takes blocks apart with the same compiled build;
+      <a href="./api.html">the reference</a> is generated from the interface the compiler emits.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="frame">
+    <div class="foot-in">
+      <div class="about">
+        <a class="brand" href="./" style="border:0;padding:0"><span class="glyph"><i></i><i></i><i class="v4"></i><i></i><i></i><i class="v6"></i><i></i><i></i></span>moonip</a>
+        <p>IP addresses and networks for MoonBit: parsing, formatting, block arithmetic and
+        classification, on every target the compiler builds for.</p>
+      </div>
+      <div>
+        <h4>pages</h4>
+        <ul>
+          <li><a href="./guide.html">Guide</a></li>
+          <li><a href="./api.html">API reference</a></li>
+          <li><a href="./explorer.html">Explorer</a></li>
+          <li><a href="./showcase.html">Showcase</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>elsewhere</h4>
+        <ul>
+          <li><a href="https://github.com/moonbitstack/moonip">GitHub</a></li>
+          <li><a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a></li>
+          <li><a href="https://github.com/moonbitstack/moonip/blob/master/LICENSE">Apache-2.0</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="trailer">
+      <span class="eof">eof</span>
+      <span>checksum 0x<span id="foot-chk">0000</span></span>
+      <span>RFC 791 · 4291 · 5952 · 4632 · 6890</span>
+      <span>IANA registries, 2026-10-31</span>
+    </div>
+  </div>
+</footer>
+
+<a class="totop" id="totop" href="#top" aria-label="Back to top" title="Back to top">
+  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 12.6V4.2M4 8.2l4-4 4 4"/></svg>
+  <span>top</span>
+</a>
+
+<script type="module" src="./assets/site.js"></script>
+</body>
+</html>

@@ -9,6 +9,7 @@ No sockets, no I/O, no dependencies.
   <a href="https://moonbitstack.github.io/moonip/guide.html">Guide</a> ·
   <a href="https://moonbitstack.github.io/moonip/api.html">API reference</a> ·
   <a href="https://moonbitstack.github.io/moonip/explorer.html">Explorer</a> ·
+  <a href="https://moonbitstack.github.io/moonip/showcase.html">Showcase</a> ·
   <a href="https://mooncakes.io/docs/moonbitstack/moonip">mooncakes</a>
 </p>
 
@@ -128,6 +129,7 @@ Parsing is strict on purpose. These are refused rather than guessed at:
 - [Guide](https://moonbitstack.github.io/moonip/guide.html) — ten steps, each with the output it gives
 - [API reference](https://moonbitstack.github.io/moonip/api.html) — generated from the doc comments
 - [Explorer](https://moonbitstack.github.io/moonip/explorer.html) — the library compiled to JavaScript, running in the page
+- [Showcase](https://moonbitstack.github.io/moonip/showcase.html) — a datagram reassembled from its fragments, and the classification walk drawn as hops
 - [Skill](docs/skills/moonip/SKILL.md) — for an agent that has to use the package
 
 Apache-2.0.
