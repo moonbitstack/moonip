@@ -1701,10 +1701,9 @@ footer ul a:hover {
 
 /* ---------- back to the top, from either side ----------
    Two thin tabs in the margins, halfway down, the way a drawing marks a field at
-   its edge. The word is set vertically and the pair mirrors across the frame: on
-   the right it runs downward with the tops of the letters facing right, on the
-   left it runs upward with the tops facing left. Each tab carries a chevron above
-   the word, pointing the way it takes you.
+   its edge. Nothing but the word, set vertically, and the pair mirrors across the
+   frame: on the right it runs downward with the tops of the letters facing right,
+   on the left it runs upward with the tops facing left.
 
    Where the margins are narrower than a tab there is no room for the pair: the
    left tab goes and the right one folds into the corner square, which is also
@@ -1721,7 +1720,6 @@ footer ul a:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
   border: 1px solid var(--rule);
   background: var(--field);
   color: var(--ink-2);
@@ -1740,16 +1738,6 @@ footer ul a:hover {
 
 .totop.right {
   right: calc(50% - 688px);
-}
-
-.totop svg {
-  width: 12px;
-  height: 12px;
-  display: block;
-  flex: none;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.4;
 }
 
 .totop span {
@@ -1788,7 +1776,6 @@ footer ul a:hover {
     translate: none;
     width: 44px;
     height: 44px;
-    gap: 2px;
     color: var(--ink);
   }
 
@@ -1805,11 +1792,6 @@ footer ul a:hover {
     rotate: none;
     font-size: 8px;
     letter-spacing: 0.12em;
-  }
-
-  .totop svg {
-    width: 14px;
-    height: 14px;
   }
 }
 
