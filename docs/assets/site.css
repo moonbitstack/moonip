@@ -345,7 +345,7 @@ nav.nav svg {
 @media (width <= 620px) {
   nav.nav a {
     padding: 0 5px;
-    font-size: 10.5px;
+    font-size: 11px;
   }
 
   nav.nav a.gh {
@@ -1782,46 +1782,48 @@ footer ul a:hover {
 }
 
 /* ---------- the day / night switch ----------
-   Two positions, in the same cells the navigation uses, on every page: it reads as
-   another field of the strip rather than a control bolted to it. The choice is
-   written on the root and kept, so it survives a move to another page; until one
-   is made, the stylesheet's media query is what decides. */
+   One button, and it says the mode it will put the page in: "night" while the page
+   is light. Both words share one grid cell, so the cell is always as wide as the
+   longer of them — the strip never shifts under the pointer as the label changes.
+   Until a choice is made the stylesheet's media query decides, and the button
+   follows it. */
 
 .themesw {
-  display: flex;
-  align-items: stretch;
-  border-left: 1px solid var(--rule-soft);
-}
-
-.themesw button {
-  display: flex;
+  display: grid;
   align-items: center;
   border: 0;
+  border-left: 1px solid var(--rule-soft);
   border-right: 1px solid var(--rule-soft);
   background: none;
   padding: 0 9px;
   font-family: var(--mono);
   font-size: 9.5px;
+  line-height: 1;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--ink-2);
   cursor: pointer;
 }
 
-.themesw button:hover {
+/* The word that is not showing still holds the cell open. */
+.themesw span {
+  grid-area: 1 / 1;
+  justify-self: center;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.themesw[data-mode="light"] .when-dark,
+.themesw[data-mode="dark"] .when-light {
+  visibility: visible;
+}
+
+.themesw:hover {
   color: var(--ink);
   background: color-mix(in srgb, var(--ink) 6%, transparent);
 }
 
-/* The current mode is marked with a rule, not the inverted fill the navigation
-   uses for the current page: two different "on" states should not look the same. */
-.themesw button[aria-pressed="true"] {
-  color: var(--ink);
-  background: color-mix(in srgb, var(--ink) 7%, transparent);
-  box-shadow: inset 0 -2px 0 var(--v4);
-}
-
-.themesw button:focus-visible {
+.themesw:focus-visible {
   outline: 1px solid var(--v4);
   outline-offset: -3px;
 }
@@ -2391,9 +2393,9 @@ footer ul a:hover {
    the wordmark gives way — the mark alone still says whose page this is. */
 
 @media (width <= 620px) {
-  .themesw button {
+  .themesw {
     padding: 0 6px;
-    font-size: 8.5px;
+    font-size: 9px;
     letter-spacing: 0.06em;
   }
 }

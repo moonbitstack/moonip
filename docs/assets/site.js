@@ -361,35 +361,37 @@ if (chosenTheme) {
 const themeSwitch = document.querySelector(".themesw");
 if (themeSwitch) {
   const root = document.documentElement;
-  const buttons = Array.from(themeSwitch.querySelectorAll("button"));
+  const system = () =>
+    matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  const current = () => root.dataset.theme || system();
+
   const paint = () => {
-    const current =
-      root.dataset.theme ||
-      (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    for (const button of buttons) {
-      button.setAttribute("aria-pressed", String(button.dataset.set === current));
-    }
-    const colour = current === "dark" ? "#070809" : "#e6e2d6";
+    const mode = current();
+    const target = mode === "dark" ? "day" : "night";
+    themeSwitch.dataset.mode = mode;
+    themeSwitch.setAttribute("aria-label", "Switch to " + target);
+    themeSwitch.title = "Switch to " + target;
+    const colour = mode === "dark" ? "#070809" : "#e6e2d6";
     for (const meta of document.querySelectorAll('meta[name="theme-color"]')) {
       meta.setAttribute("content", colour);
     }
   };
-  // While no choice has been made, the switch follows the system as it changes.
+
+  themeSwitch.addEventListener("click", () => {
+    root.dataset.theme = current() === "dark" ? "light" : "dark";
+    try {
+      localStorage.setItem("moonip.theme", root.dataset.theme);
+    } catch (error) {
+      /* storage can be denied; the choice still holds for this page */
+    }
+    paint();
+  });
+
+  // While no choice has been made, the button follows the system as it changes.
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if (!root.dataset.theme) paint();
   });
 
-  for (const button of buttons) {
-    button.addEventListener("click", () => {
-      root.dataset.theme = button.dataset.set;
-      try {
-        localStorage.setItem("moonip.theme", button.dataset.set);
-      } catch (error) {
-        /* storage can be denied; the choice still holds for this page */
-      }
-      paint();
-    });
-  }
   paint();
 }
 
