@@ -112,3 +112,8 @@ jobs:
           python3 scripts/gen_api.py
           git diff --exit-code docs/api.html
 
+      # The vectors check that this library reads what the references write. This
+      # checks the other direction: the text and the bytes this library writes, read
+      # back by ipaddress and net/netip.
+      - name: the references read what we write
+        run: python3 scripts/check_interop.py
