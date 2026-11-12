@@ -156,6 +156,12 @@ test "prefix: containment, overlap and nesting" {
   // Families never mix, not even through an IPv4-mapped address.
   assert_true(!block.contains(Addr::parse("::ffff:192.0.2.1")))
   assert_true(!block.contains(Addr::parse("::")))
+  // Nor where the masked bits happen to line up: a /0 of either family has no
+  // bits to tell the two apart, so the family is the only thing that can.
+  assert_true(!Prefix::parse("::/0").contains(Addr::parse("1.2.3.4")))
+  assert_true(!Prefix::parse("0.0.0.0/0").contains(Addr::parse("::1")))
+  assert_true(!Prefix::parse("0.0.0.0/8").contains(Addr::parse("::")))
+  assert_true(!Prefix::parse("::/8").contains(Addr::parse("0.0.0.0")))
   assert_true(block.overlaps(Prefix::parse("192.0.2.128/25")))
   assert_true(block.overlaps(Prefix::parse("0.0.0.0/0")))
   assert_true(!block.overlaps(Prefix::parse("192.0.3.0/24")))
@@ -169,6 +175,30 @@ test "prefix: containment, overlap and nesting" {
   assert_true(
     !Prefix::parse("2001:db8::/32").is_subnet_of(Prefix::parse("192.0.2.0/24")),
   )
+  assert_true(block.is_supernet_of(Prefix::parse("192.0.2.128/25")))
+  assert_true(block.is_supernet_of(block))
+  assert_true(!block.is_supernet_of(Prefix::parse("192.0.2.0/23")))
+  assert_true(!block.is_supernet_of(Prefix::parse("2001:db8::/32")))
+}
+
+///|
+test "prefix: a single address and the count of a block" {
+  assert_true(Prefix::parse("192.0.2.1/32").is_single_ip())
+  assert_true(Prefix::parse("::1/128").is_single_ip())
+  assert_true(!Prefix::parse("192.0.2.0/31").is_single_ip())
+  assert_true(!Prefix::parse("2001:db8::/64").is_single_ip())
+  assert_eq(Prefix::parse("192.0.2.7/32").num_addresses(), Some(1UL))
+  assert_eq(Prefix::parse("192.0.2.0/24").num_addresses(), Some(256UL))
+  assert_eq(Prefix::parse("0.0.0.0/0").num_addresses(), Some(4_294_967_296UL))
+  assert_eq(Prefix::parse("2001:db8::/128").num_addresses(), Some(1UL))
+  // 2^64 is one past the last value a UInt64 counts, so /64 and shorter have no
+  // answer in this type rather than a wrong one.
+  assert_eq(Prefix::parse("2001:db8::/64").num_addresses(), None)
+  assert_eq(
+    Prefix::parse("2001:db8::/65").num_addresses(),
+    Some(9_223_372_036_854_775_808UL),
+  )
+  assert_eq(Prefix::parse("::/0").num_addresses(), None)
 }
 
 ///|

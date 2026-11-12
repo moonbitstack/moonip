@@ -1,5 +1,6 @@
 // Classification, checked against the vectors generated from CPython's ipaddress
-// (all eight predicates) and Go's net/netip (the four it shares).
+// (all eight registry predicates) and Go's net/netip (the four it shares, plus the
+// two multicast scopes it names separately).
 
 ///|
 let flag_private : Int32 = 1
@@ -152,6 +153,44 @@ test "classification: predicates that are their own thing" {
   assert_true(Addr::parse("127.0.0.1").is_loopback())
   assert_true(Addr::parse("::1").is_loopback())
   assert_true(!Addr::parse("::2").is_loopback())
+}
+
+///|
+test "classification: the multicast scopes agree with net/netip" {
+  for row in go_scope_cases() {
+    let (text, expected) = row
+    let addr = Addr::parse(text)
+    let mine = bit(addr.is_interface_local_multicast(), 1) |
+      bit(addr.is_link_local_multicast(), 2)
+    assert_eq(mine, expected, msg="multicast scope of {" + text + "}")
+  }
+}
+
+///|
+test "classification: the two multicast scopes have their own predicates" {
+  // RFC 4291 section 2.7 puts the scope in the second and third octets of an
+  // ff00::/8 address; 1 is the interface, 2 the link.
+  assert_true(Addr::parse("ff01::1").is_interface_local_multicast())
+  assert_true(!Addr::parse("ff01::1").is_link_local_multicast())
+  assert_true(Addr::parse("ff02::fb").is_link_local_multicast())
+  assert_true(!Addr::parse("ff02::fb").is_interface_local_multicast())
+  assert_true(!Addr::parse("ff05::1").is_interface_local_multicast())
+  assert_true(!Addr::parse("ff05::1").is_link_local_multicast())
+  // Both are multicast, and neither is link-local unicast.
+  assert_true(Addr::parse("ff02::1").is_multicast())
+  assert_true(!Addr::parse("ff02::1").is_link_local())
+  // IPv4's link-local multicast is 224.0.0.0/24 (RFC 1112); the rest of 224/4 is
+  // multicast with a wider scope, and IPv4 has no interface-local scope.
+  assert_true(Addr::parse("224.0.0.1").is_link_local_multicast())
+  assert_true(Addr::parse("224.0.0.255").is_link_local_multicast())
+  assert_true(!Addr::parse("224.0.1.1").is_link_local_multicast())
+  assert_true(!Addr::parse("239.255.255.250").is_link_local_multicast())
+  assert_true(!Addr::parse("224.0.0.1").is_interface_local_multicast())
+  // Link-local unicast is a different predicate.
+  assert_true(!Addr::parse("169.254.1.1").is_link_local_multicast())
+  assert_true(!Addr::parse("fe80::1").is_link_local_multicast())
+  // An IPv4-mapped address is judged as the IPv4 one, like the rest.
+  assert_true(Addr::parse("::ffff:224.0.0.1").is_link_local_multicast())
 }
 
 ///|

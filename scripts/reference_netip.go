@@ -18,17 +18,19 @@ type request struct {
 }
 
 type addrAnswer struct {
-	OK          bool   `json:"ok"`
-	Text        string `json:"text"`
-	Expanded    string `json:"expanded"`
-	Zoned       bool   `json:"zoned"`
-	Bytes       string `json:"bytes"`
-	Loopback    bool   `json:"loopback"`
-	Multicast   bool   `json:"multicast"`
-	LinkLocal   bool   `json:"link_local"`
-	Unspecified bool   `json:"unspecified"`
-	Private     bool   `json:"private"`
-	Global      bool   `json:"global_unicast"`
+	OK             bool   `json:"ok"`
+	Text           string `json:"text"`
+	Expanded       string `json:"expanded"`
+	Zoned          bool   `json:"zoned"`
+	Bytes          string `json:"bytes"`
+	Loopback       bool   `json:"loopback"`
+	Multicast      bool   `json:"multicast"`
+	LinkLocal      bool   `json:"link_local"`
+	Unspecified    bool   `json:"unspecified"`
+	Private        bool   `json:"private"`
+	Global         bool   `json:"global_unicast"`
+	InterfaceLocal bool   `json:"interface_local_multicast"`
+	LinkLocalCast  bool   `json:"link_local_multicast"`
 }
 
 type prefixAnswer struct {
@@ -68,17 +70,19 @@ func describeAddr(s string) addrAnswer {
 		return addrAnswer{}
 	}
 	return addrAnswer{
-		OK:          true,
-		Text:        addr.String(),
-		Expanded:    addr.StringExpanded(),
-		Zoned:       addr.Zone() != "",
-		Bytes:       hexOf(addr),
-		Loopback:    addr.IsLoopback(),
-		Multicast:   addr.IsMulticast(),
-		LinkLocal:   addr.IsLinkLocalUnicast(),
-		Unspecified: addr.IsUnspecified(),
-		Private:     addr.IsPrivate(),
-		Global:      addr.IsGlobalUnicast(),
+		OK:             true,
+		Text:           addr.String(),
+		Expanded:       addr.StringExpanded(),
+		Zoned:          addr.Zone() != "",
+		Bytes:          hexOf(addr),
+		Loopback:       addr.IsLoopback(),
+		Multicast:      addr.IsMulticast(),
+		LinkLocal:      addr.IsLinkLocalUnicast(),
+		Unspecified:    addr.IsUnspecified(),
+		Private:        addr.IsPrivate(),
+		Global:         addr.IsGlobalUnicast(),
+		InterfaceLocal: addr.IsInterfaceLocalMulticast(),
+		LinkLocalCast:  addr.IsLinkLocalMulticast(),
 	}
 }
 

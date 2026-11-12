@@ -246,6 +246,48 @@ pub fn Prefix::is_subnet_of(self : Prefix, other : Prefix) -> Bool {
 }
 
 ///|
+/// Whether this block holds the other one, equal blocks included. The same test as
+/// `is_subnet_of` with the two sides the other way round, for callers who read
+/// better that way.
+///
+/// ```mbt check
+/// test {
+///   let wide = @moonip.Prefix::parse("10.0.0.0/8")
+///   assert_true(wide.is_supernet_of(@moonip.Prefix::parse("10.1.0.0/16")))
+///   assert_false(wide.is_supernet_of(@moonip.Prefix::parse("11.0.0.0/8")))
+/// }
+/// ```
+pub fn Prefix::is_supernet_of(self : Prefix, other : Prefix) -> Bool {
+  other.is_subnet_of(self)
+}
+
+///|
+/// Whether the block is a single address, that is, a `/32` or a `/128`.
+pub fn Prefix::is_single_ip(self : Prefix) -> Bool {
+  self.plen == self.net.bits()
+}
+
+///|
+/// How many addresses the block holds, or `None` when that is more than a `UInt64`
+/// can count: an IPv6 block shorter than `/64`. An IPv4 block always answers,
+/// `0.0.0.0/0` with 4294967296.
+///
+/// ```mbt check
+/// test {
+///   assert_eq(@moonip.Prefix::parse("192.0.2.0/24").num_addresses(), Some(256UL))
+///   assert_eq(@moonip.Prefix::parse("2001:db8::/32").num_addresses(), None)
+/// }
+/// ```
+pub fn Prefix::num_addresses(self : Prefix) -> UInt64? {
+  let space = self.net.bits() - self.plen
+  if space >= 64 {
+    None
+  } else {
+    Some(1UL << space)
+  }
+}
+
+///|
 pub impl Eq for Prefix with fn equal(self, other) {
   self.plen == other.plen && self.net == other.net
 }

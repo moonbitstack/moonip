@@ -72,11 +72,13 @@ clears them with `strict=false`; `Prefix::new` keeps whatever it is given, and
 
 | Call | Answer |
 |:--|:--|
-| `contains`, `overlaps`, `is_subnet_of` | whether addresses or blocks meet |
+| `contains`, `overlaps` | whether an address or another block meets this one |
+| `is_subnet_of`, `is_supernet_of` | which of the two holds the other |
 | `hosts` | the addresses an interface can be given, lazily |
 | `subnets`, `supernet` | split down, or the block that holds this one |
 | `exclude` | the parts of a block outside another one |
 | `summarize`, `collapse` | the fewest blocks holding a range or a set |
+| `num_addresses`, `is_single_ip` | how many addresses there are, or whether there is one |
 
 ```moonbit
 let parts = @moonip.summarize(
@@ -90,10 +92,15 @@ assert_eq(parts.map(@moonip.Prefix::to_string), [
 
 ## Classification
 
-Eight predicates, each a row of the IANA special-purpose address registries:
+Eight predicates answer one row each of the two IANA special-purpose address
+registries:
 
 `is_unspecified` · `is_loopback` · `is_multicast` · `is_link_local` ·
 `is_site_local` · `is_reserved` · `is_private` · `is_global`
+
+Two more read the scope of a multicast address, which RFC 4291 puts in the second
+octet: `is_interface_local_multicast` is `ff01::/16` and `is_link_local_multicast`
+is `224.0.0.0/24` and `ff02::/16`.
 
 `is_private` means "a registry marks this as not globally reachable": the RFC 1918
 blocks, unique local addresses, loopback, link local, documentation, benchmarking

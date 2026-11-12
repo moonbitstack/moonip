@@ -287,6 +287,7 @@ SIGNATURE_TYPES = {
     "addr_text_cases": "Array[(String, Bool, String, String, String)]",
     "addr_class_cases": "Array[(String, Int32)]",
     "go_class_cases": "Array[(String, Int32)]",
+    "go_scope_cases": "Array[(String, Int32)]",
     "prefix_parse_cases": "Array[(String, Bool, String, String)]",
     "prefix_shape_cases": "Array[(String, String, String, String, String, String, String, String)]",
     "exclude_cases": "Array[(String, String, String)]",
@@ -448,6 +449,16 @@ def main():
             continue
         go_class_rows.append((text, bits))
 
+    # The two multicast scopes net/netip names separately. ipaddress has no such
+    # predicate, so this table is generated from Go alone.
+    go_scope_rows = []
+    for text, _ in class_rows:
+        go = go_addrs[text]
+        bits = (1 if go["interface_local_multicast"] else 0) | (
+            2 if go["link_local_multicast"] else 0
+        )
+        go_scope_rows.append((text, bits))
+
     # Operations: ipaddress is the only one of the two that has them.
     exclude_rows = []
     exclude_pairs = [
@@ -575,6 +586,9 @@ def main():
         "src/vectors_go_class_wbtest.mbt": render_chunks(
             "Classification cases cross-checked with Go, part %d (%d rows).", "go_class_cases",
             go_class_rows, lambda row: "(%s, %d)" % (mbt_str(row[0]), row[1]), header),
+        "src/vectors_go_scope_wbtest.mbt": render_chunks(
+            "Multicast scope cases cross-checked with Go, part %d (%d rows).", "go_scope_cases",
+            go_scope_rows, lambda row: "(%s, %d)" % (mbt_str(row[0]), row[1]), header),
         "src/vectors_prefix_parse_wbtest.mbt": render_chunks(
             "Prefix parsing cases, part %d (%d rows).", "prefix_parse_cases", prefix_parse_rows,
             lambda row: "(%s, %s, %s, %s)" % (
@@ -615,7 +629,8 @@ def main():
         (ROOT / name).write_text(content, encoding="utf-8", newline="\n")
 
     print("addresses: %d rows (%d accepted)" % (len(text_rows), sum(1 for r in text_rows if r[1])))
-    print("classification: %d rows, Go cross-check: %d rows" % (len(class_rows), len(go_class_rows)))
+    print("classification: %d rows, Go cross-check: %d rows, Go scope: %d rows"
+          % (len(class_rows), len(go_class_rows), len(go_scope_rows)))
     print("prefixes: %d parse rows, %d shape rows" % (len(prefix_parse_rows), len(prefix_shape_cases)))
     print("exclude %d, summarize %d, collapse %d, subnets %d, supernet %d"
           % (len(exclude_rows), len(summarize_rows), len(collapse_rows), len(subnets_rows), len(supernet_rows)))

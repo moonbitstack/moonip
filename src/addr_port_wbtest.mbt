@@ -8,6 +8,13 @@ fn parse_endpoint(text : String) -> AddrPort? {
 }
 
 ///|
+fn with_port_result(end : AddrPort, port : Int32) -> AddrPort? {
+  Some(end.with_port(port)) catch {
+    _ => None
+  }
+}
+
+///|
 test "address and port: every case agrees with net/netip" {
   for row in addrport_cases() {
     let (text, accepted, expected) = row
@@ -96,4 +103,16 @@ test "address and port: values can key a map and sort by host then port" {
   assert_eq(ports[0].to_string(), "192.0.2.1:80")
   assert_eq(ports[1].to_string(), "192.0.2.1:443")
   assert_eq(ports[2].to_string(), "192.0.2.2:1")
+}
+
+///|
+test "address and port: the port can be rewritten, and only within range" {
+  let end = AddrPort::parse("[2001:db8::1]:8080")
+  assert_eq(end.with_port(443).to_string(), "[2001:db8::1]:443")
+  assert_eq(end.with_port(0).to_string(), "[2001:db8::1]:0")
+  assert_eq(end.addr(), Addr::parse("2001:db8::1"))
+  let wide = AddrPort::parse("192.0.2.1:1")
+  assert_eq(wide.with_port(65535).to_string(), "192.0.2.1:65535")
+  assert_true(with_port_result(wide, 65536) is None)
+  assert_true(with_port_result(wide, -1) is None)
 }

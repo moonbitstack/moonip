@@ -53,12 +53,13 @@ interface on that block and `masked()` is the block. `Prefix::parse` refuses hos
 bits by default; pass `strict=false` to have them cleared instead.
 
 `subnets(bits=...)`, `supernet(bits=...)`, `exclude`, `summarize` and `collapse`
-do the arithmetic. `exclude` always answers with the exact difference, even for a
-block that does not sit inside, so it never has to be guarded.
+do the arithmetic; `num_addresses()` counts a block and `is_single_ip()` says
+whether it holds one address. `exclude` always answers with the exact difference,
+even for a block that does not sit inside, so it never has to be guarded.
 
 ## Decide what an address is
 
-Eight predicates, taken from the IANA special-purpose registries:
+Eight predicates answer one row each of the IANA special-purpose registries:
 
 ```moonbit
 let addr = @moonip.Addr::parse("100.64.0.1")
@@ -66,6 +67,9 @@ assert_false(addr.is_private()) // shared address space is not private-use
 assert_false(addr.is_global()) // and it is not reachable either
 assert_false(addr.is_multicast())
 ```
+
+Two more read a multicast address's scope: `is_interface_local_multicast` for
+`ff01::/16`, `is_link_local_multicast` for `224.0.0.0/24` and `ff02::/16`.
 
 `is_private` means "a registry marks this as not globally reachable", which is
 wider than RFC 1918: it covers loopback, link local, documentation and

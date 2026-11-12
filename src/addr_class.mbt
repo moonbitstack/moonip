@@ -168,6 +168,42 @@ pub fn Addr::is_multicast(self : Addr) -> Bool {
 }
 
 ///|
+/// Whether this is an interface-local multicast address, `ff01::/16` (RFC 4291
+/// section 2.7). The scope says the packet never leaves the interface it was sent
+/// on, which is why IPv4, whose multicast has no such scope, is always false.
+///
+/// ```mbt check
+/// test {
+///   assert_true(@moonip.Addr::parse("ff01::1").is_interface_local_multicast())
+///   assert_false(@moonip.Addr::parse("ff02::1").is_interface_local_multicast())
+/// }
+/// ```
+pub fn Addr::is_interface_local_multicast(self : Addr) -> Bool {
+  let addr = routed_as(self)
+  !addr.v4 && addr.hi >> 48 == 0xFF01UL
+}
+
+///|
+/// Whether this is a link-local multicast address: `224.0.0.0/24` for IPv4,
+/// `ff02::/16` for IPv6. `is_link_local` is the unicast counterpart.
+///
+/// ```mbt check
+/// test {
+///   assert_true(@moonip.Addr::parse("224.0.0.251").is_link_local_multicast())
+///   assert_true(@moonip.Addr::parse("ff02::fb").is_link_local_multicast())
+///   assert_false(@moonip.Addr::parse("239.1.1.1").is_link_local_multicast())
+/// }
+/// ```
+pub fn Addr::is_link_local_multicast(self : Addr) -> Bool {
+  let addr = routed_as(self)
+  if addr.v4 {
+    v4_within(u32_of(addr), 0xE000_0000UL, 24)
+  } else {
+    addr.hi >> 48 == 0xFF02UL
+  }
+}
+
+///|
 /// Whether this is a link-local address: `169.254.0.0/16` for IPv4 (RFC 3927),
 /// `fe80::/10` for IPv6.
 pub fn Addr::is_link_local(self : Addr) -> Bool {

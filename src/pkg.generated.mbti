@@ -47,7 +47,9 @@ pub fn Addr::exploded(Self) -> String
 pub fn Addr::hash(Self) -> Int32
 pub fn Addr::hash_combine(Self, Hasher) -> Unit
 pub fn Addr::is_global(Self) -> Bool
+pub fn Addr::is_interface_local_multicast(Self) -> Bool
 pub fn Addr::is_link_local(Self) -> Bool
+pub fn Addr::is_link_local_multicast(Self) -> Bool
 pub fn Addr::is_loopback(Self) -> Bool
 pub fn Addr::is_multicast(Self) -> Bool
 pub fn Addr::is_private(Self) -> Bool
@@ -103,6 +105,7 @@ pub fn AddrPort::parse(StringView) -> Self raise Refused
 pub fn AddrPort::port(Self) -> Int32
 pub fn AddrPort::to_repr(Self) -> @debug.Repr
 pub fn AddrPort::to_string(Self) -> String
+pub fn AddrPort::with_port(Self, Int32) -> Self raise Refused
 pub impl Compare for AddrPort
 pub impl Eq for AddrPort
 pub impl Hash for AddrPort
@@ -124,11 +127,14 @@ pub fn Prefix::hash(Self) -> Int32
 pub fn Prefix::hash_combine(Self, Hasher) -> Unit
 pub fn Prefix::hostmask(Self) -> Addr
 pub fn Prefix::hosts(Self) -> Iter[Addr]
+pub fn Prefix::is_single_ip(Self) -> Bool
 pub fn Prefix::is_subnet_of(Self, Self) -> Bool
+pub fn Prefix::is_supernet_of(Self, Self) -> Bool
 pub fn Prefix::masked(Self) -> Self
 pub fn Prefix::netmask(Self) -> Addr
 pub fn Prefix::new(Addr, Int32) -> Self raise Refused
 pub fn Prefix::not_equal(Self, Self) -> Bool
+pub fn Prefix::num_addresses(Self) -> UInt64?
 pub fn Prefix::op_ge(Self, Self) -> Bool
 pub fn Prefix::op_gt(Self, Self) -> Bool
 pub fn Prefix::op_le(Self, Self) -> Bool

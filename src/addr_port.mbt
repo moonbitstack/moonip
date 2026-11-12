@@ -123,6 +123,22 @@ pub fn AddrPort::port(self : AddrPort) -> Int32 {
 }
 
 ///|
+/// The same address on another port, for a proxy that rewrites one half of an end.
+///
+/// ```mbt check
+/// test {
+///   let end = @moonip.AddrPort::parse("192.0.2.1:8080")
+///   assert_eq(end.with_port(443).to_string(), "192.0.2.1:443")
+/// }
+/// ```
+pub fn AddrPort::with_port(
+  self : AddrPort,
+  port : Int32,
+) -> AddrPort raise Refused {
+  AddrPort::new(self.addr, port)
+}
+
+///|
 pub impl Eq for AddrPort with fn equal(self, other) {
   self.port == other.port && self.addr == other.addr
 }

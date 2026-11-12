@@ -196,7 +196,9 @@ println(@moonip.Prefix::parse(<span class="str">"192.0.2.0/31"</span>).hosts().c
 2</div></section>
 <section class="step" id="s08"><div class="n">step 08</div><h2>Split, join, cut</h2>
 <p>Four operations cover most of the arithmetic: splitting a block into smaller ones, joining a range
-back into the fewest blocks, cutting a block out of another, and collapsing a set.</p>
+back into the fewest blocks, cutting a block out of another, and collapsing a set.
+<code>num_addresses</code> counts what a block holds and <code>is_single_ip</code> says whether that is
+one address.</p>
 <div class="code"><div class="code-bar"><span>blocks.mbt</span><span class="r">moonbit</span></div><pre><code><span class="kw">let</span> block = @moonip.Prefix::parse(<span class="str">"192.0.2.0/24"</span>)
 
 <span class="kw">for</span> part <span class="kw">in</span> block.subnets(bits=<span class="kw">26</span>) {
@@ -217,7 +219,9 @@ back into the fewest blocks, cutting a block out of another, and collapsing a se
 }
 <span class="cmt">// 192.0.2.128/25  192.0.2.0/26</span>
 
-println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 192.0.0.0/16</span></code></pre></div>
+println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 192.0.0.0/16</span>
+println(block.num_addresses())          <span class="cmt">// Some(256)</span>
+println(block.is_single_ip())           <span class="cmt">// false</span></code></pre></div>
 <div class="out"><span class="what">out</span>192.0.2.0/26
 192.0.2.64/26
 192.0.2.128/26
@@ -227,7 +231,9 @@ println(block.supernet(bits=<span class="kw">16</span>))  <span class="cmt">// 1
 192.0.2.130/32
 192.0.2.128/25
 192.0.2.0/26
-192.0.0.0/16</div>
+192.0.0.0/16
+Some(256)
+false</div>
 <p><code>exclude</code> answers with the exact difference even when the block being cut out does not sit
 inside, so it never has to refuse: a block that merely touches the edge leaves it whole, and one that
 covers it leaves nothing. <code>collapse</code> takes a list and returns the fewest blocks holding the
@@ -257,7 +263,10 @@ fc00::1          private=true   global=false
 <p>Shared address space, <code>100.64.0.0/10</code>, is the one block that is neither private nor
 reachable: it answers false to both questions. The other predicates — <code>is_loopback</code>,
 <code>is_unspecified</code>, <code>is_multicast</code>, <code>is_link_local</code>,
-<code>is_site_local</code>, <code>is_reserved</code> — are the rows of the registry, one for one.</p></section>
+<code>is_site_local</code>, <code>is_reserved</code> — are the rows of the registry, one for one. Two
+more read the scope field a multicast address carries: <code>is_interface_local_multicast</code> is
+<code>ff01::/16</code>, and <code>is_link_local_multicast</code> is <code>224.0.0.0/24</code> and
+<code>ff02::/16</code>.</p></section>
 <section class="step" id="s10"><div class="n">step 10</div><h2>An address with a port</h2>
 <p><code>AddrPort</code> reads the form a URL or a log line uses. Brackets are what tells the last colon
 apart from the ones inside an IPv6 address, so an unbracketed IPv6 address with a port is refused rather

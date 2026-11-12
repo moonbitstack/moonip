@@ -52,14 +52,14 @@
 <p class="lede" style="margin-top:18px">Built from the interface the compiler emits and the doc comments in the sources, so a function that is documented is a function that is here. One package, five groups.</p>
 <div class="filter" style="margin-top:22px">
 <input id="q" type="search" placeholder="filter names" aria-label="Filter the reference by name" autocomplete="off" spellcheck="false">
-<span id="hits">94 entries</span>
+<span id="hits">100 entries</span>
 </div>
 </div></section>
 <section class="row">
 <div class="rail"><span><b>01</b>–<b>05</b></span></div>
 <div class="field">
 <div class="ref-group" id="addr">
-<div class="ref-head"><span class="no">01</span><h2>Address</h2><span class="of">Addr · 40 entries</span></div>
+<div class="ref-head"><span class="no">01</span><h2>Address</h2><span class="of">Addr · 42 entries</span></div>
 <p class="group-desc">One address: IPv4 or IPv6, with the zone a scoped IPv6 address may carry.</p>
 <div class="item">
 <pre class="sig">pub struct Addr</pre>
@@ -103,8 +103,16 @@
 <p class="item-doc">Whether the address is globally reachable: the opposite of <code>is_private</code>, except for shared address space <code>100.64.0.0/10</code>, which is neither private nor reachable and so answers false to both.</p>
 </div>
 <div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_interface_local_multicast(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether this is an interface-local multicast address, <code>ff01::/16</code> (RFC 4291 section 2.7). The scope says the packet never leaves the interface it was sent on, which is why IPv4, whose multicast has no such scope, is always false.</p>
+</div>
+<div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_link_local(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this is a link-local address: <code>169.254.0.0/16</code> for IPv4 (RFC 3927), <code>fe80::/10</code> for IPv6.</p>
+</div>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_link_local_multicast(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether this is a link-local multicast address: <code>224.0.0.0/24</code> for IPv4, <code>ff02::/16</code> for IPv6. <code>is_link_local</code> is the unicast counterpart.</p>
 </div>
 <div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Addr</i>::is_loopback(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
@@ -216,7 +224,7 @@
 </div>
 </div>
 <div class="ref-group" id="prefix">
-<div class="ref-head"><span class="no">02</span><h2>Block</h2><span class="of">Prefix · 28 entries</span></div>
+<div class="ref-head"><span class="no">02</span><h2>Block</h2><span class="of">Prefix · 31 entries</span></div>
 <p class="group-desc">An address and a mask length. Keeps the address it was written with.</p>
 <div class="item">
 <pre class="sig">pub struct Prefix</pre>
@@ -266,8 +274,16 @@
 <p class="item-doc">The addresses that can be given to an interface in the block.  For IPv4 that is every address except the network and broadcast ones, with a <code>/31</code> (RFC 3021) and a <code>/32</code> kept whole because both ends are usable there. For IPv6 it is every address except the subnet-router anycast address at the bottom, with a <code>/127</code> and a <code>/128</code> kept whole.  The iterator is lazy; a <code>/0</code> has a great many addresses and no one wants them in an array.</p>
 </div>
 <div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::is_single_ip(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether the block is a single address, that is, a <code>/32</code> or a <code>/128</code>.</p>
+</div>
+<div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::is_subnet_of(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
 <p class="item-doc">Whether this block sits inside the other one, equal blocks included.</p>
+</div>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::is_supernet_of(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+<p class="item-doc">Whether this block holds the other one, equal blocks included. The same test as <code>is_subnet_of</code> with the two sides the other way round, for callers who read better that way.</p>
 </div>
 <div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::masked(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Self</i></pre>
@@ -283,6 +299,10 @@
 </div>
 <div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::not_equal(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
+</div>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::num_addresses(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">UInt64</i>?</pre>
+<p class="item-doc">How many addresses the block holds, or <code>None</code> when that is more than a <code>UInt64</code> can count: an IPv6 block shorter than <code>/64</code>. An IPv4 block always answers, <code>0.0.0.0/0</code> with 4294967296.</p>
 </div>
 <div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">Prefix</i>::op_ge(<i class="ty">Self</i>, <i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">Bool</i></pre>
@@ -323,7 +343,7 @@
 </div>
 </div>
 <div class="ref-group" id="addrport">
-<div class="ref-head"><span class="no">03</span><h2>Address and port</h2><span class="of">AddrPort · 17 entries</span></div>
+<div class="ref-head"><span class="no">03</span><h2>Address and port</h2><span class="of">AddrPort · 18 entries</span></div>
 <p class="group-desc">One end of a conversation.</p>
 <div class="item">
 <pre class="sig">pub struct AddrPort</pre>
@@ -383,6 +403,10 @@
 </div>
 <div class="item">
 <pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::to_string(<i class="ty">Self</i>) <i class="op">-&gt;</i> <i class="ty">String</i></pre>
+</div>
+<div class="item">
+<pre class="sig">pub <i class="k">fn</i> <i class="ty">AddrPort</i>::with_port(<i class="ty">Self</i>, <i class="ty">Int32</i>) <i class="op">-&gt;</i> <i class="ty">Self</i> raise <i class="ty">Refused</i></pre>
+<p class="item-doc">The same address on another port, for a proxy that rewrites one half of an end.</p>
 </div>
 </div>
 <div class="ref-group" id="refused">
