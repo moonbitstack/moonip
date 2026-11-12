@@ -382,7 +382,7 @@ if (themeSwitch) {
   themeSwitch.addEventListener("click", () => {
     root.dataset.theme = current() === "dark" ? "light" : "dark";
     try {
-      localStorage.setItem("moonip.theme", root.dataset.theme);
+      sessionStorage.setItem("moonip.theme", root.dataset.theme);
     } catch (error) {
       /* storage can be denied; the choice still holds for this page */
     }
