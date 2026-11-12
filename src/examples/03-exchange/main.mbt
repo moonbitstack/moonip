@@ -59,7 +59,14 @@ fn prefix_of(text : String) -> @moonip.Prefix? {
 
 ///|
 fn write_addr(given : String, addr : @moonip.Addr) -> Unit {
-  println("a\t" + given + "\t" + addr.to_string() + "\t" + hex(addr.encode()))
+  println(
+    "a\t" +
+    given +
+    "\t" +
+    addr.to_string() +
+    "\t" +
+    @hex.encode(addr.encode()[:]),
+  )
 }
 
 ///|
@@ -81,16 +88,4 @@ fn write_block(given : String, prefix : @moonip.Prefix) -> Unit {
     "\t" +
     broadcast,
   )
-}
-
-///|
-fn hex(bytes : Bytes) -> String {
-  let digits = "0123456789abcdef"
-  let mut out = ""
-  for byte in bytes {
-    out = out +
-      digits.get_char((byte.to_int() >> 4) & 0xF).unwrap().to_string() +
-      digits.get_char(byte.to_int() & 0xF).unwrap().to_string()
-  }
-  out
 }
