@@ -612,7 +612,7 @@ def main():
     }
 
     for name, content in outputs.items():
-        (ROOT / name).write_text(content, encoding="utf-8")
+        (ROOT / name).write_text(content, encoding="utf-8", newline="\n")
 
     print("addresses: %d rows (%d accepted)" % (len(text_rows), sum(1 for r in text_rows if r[1])))
     print("classification: %d rows, Go cross-check: %d rows" % (len(class_rows), len(go_class_rows)))

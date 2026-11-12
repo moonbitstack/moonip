@@ -61,8 +61,12 @@ def main():
         "# deduplicated and sorted. Rebuild with scripts/extract_corpus.py.\n"
         % (len(py), len(go))
     )
-    (CORPUS / "addresses.txt").write_text(header + "\n".join(plain) + "\n", encoding="utf-8")
-    (CORPUS / "prefixes.txt").write_text(header + "\n".join(prefixes) + "\n", encoding="utf-8")
+    (CORPUS / "addresses.txt").write_text(
+        header + "\n".join(plain) + "\n", encoding="utf-8", newline="\n"
+    )
+    (CORPUS / "prefixes.txt").write_text(
+        header + "\n".join(prefixes) + "\n", encoding="utf-8", newline="\n"
+    )
     print("addresses: %d, prefixes: %d" % (len(plain), len(prefixes)))
 
 

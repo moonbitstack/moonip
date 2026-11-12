@@ -355,7 +355,7 @@ def main():
     body.append("</div></section></main>")
 
     page = HEAD + "\n".join(body) + FOOT
-    OUT.write_text(page, encoding="utf-8")
+    OUT.write_text(page, encoding="utf-8", newline="\n")
     print("wrote %s (%d public items)" % (OUT, seen))
 
     # The check the acceptance criteria ask for: nothing the compiler exposes may be
